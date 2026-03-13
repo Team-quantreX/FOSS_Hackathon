@@ -1,4 +1,4 @@
-# Borrower Financial Inputs:-
+## Borrower Financial Inputs:-
 1. Monthly Income
 2. Monthly Expenses
 3. Existing Loan EMI
@@ -36,3 +36,32 @@ Example:
 New EMI = ₹5,000
 Income = ₹40,000
 Therefore Affordability = 0.125 (12.5%)
+
+## Risk Scoring Model
+The system calculates a borrower risk score based on financial stability.
+Total Score = 100 points
+
+# Income Score:-
+Income > ₹50,000 → 30 points  
+Income ₹25,000 – ₹50,000 → 20 points  
+Income < ₹25,000 → 10 points  
+
+# Expense Ratio Score:-
+Expense Ratio < 40% → 25 points  
+Expense Ratio 40% – 70% → 15 points  
+Expense Ratio > 70% → 5 points  
+
+# Debt-to-Income Score:-
+Debt Ratio < 20% → 25 points  
+Debt Ratio 20% – 40% → 15 points  
+Debt Ratio > 40% → 5 points  
+
+# EMI Affordability Score:-
+EMI < 20% of income → 20 points  
+EMI 20% – 35% → 10 points  
+EMI > 35% → 5 points  
+
+# Risk Category:-
+75 – 100 → Low Risk  
+50 – 74 → Medium Risk  
+Below 50 → High Risk

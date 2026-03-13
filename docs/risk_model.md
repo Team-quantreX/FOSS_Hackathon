@@ -81,3 +81,22 @@ Mobile bills paid on time → 10 points
 Regular bank deposits → 20 points
 
 Therefore Total Alternative Score = 70 points
+
+## Loan Recommendation System:-
+After calculating the borrower risk score, the system suggests suitable loan types.
+
+# Loan Types:-
+1.Personal Loan  
+2.Education Loan  
+3.Business Loan  
+4.Micro Loan  
+
+# Recommendation Logic
+Low Risk → Eligible for larger loans and longer tenure.
+Medium Risk → Eligible for moderate loan amounts.
+High Risk → Only small loans or short tenure loans recommended.
+Example:
+Therefore Risk Score = 82
+#Result:
+Eligible for Personal Loan up to ₹1,00,000  
+EMI Recommendation = Based on income affordability

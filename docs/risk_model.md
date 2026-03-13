@@ -65,3 +65,19 @@ EMI > 35% → 5 points
 75 – 100 → Low Risk  
 50 – 74 → Medium Risk  
 Below 50 → High Risk
+
+## Alternative Credit Data:-
+If the borrower does not have a credit score, the system evaluates financial reliability using alternative payment behavior.
+
+# Alternative Indicators:-
+1. Rent payment regularity
+2. Electricity bill payments
+3. Mobile or internet bill payments
+4. Bank deposit consistency
+Example Scoring:
+Rent paid regularly → 20 points  
+Utility bills paid on time → 20 points  
+Mobile bills paid on time → 10 points  
+Regular bank deposits → 20 points
+
+Therefore Total Alternative Score = 70 points

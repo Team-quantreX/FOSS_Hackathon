@@ -51,6 +51,9 @@ Upload Mobile Bill:<br>
 
 <h3>Loan Recommendation</h3>
 <p id="loanType">Recommended loan will appear here.</p>
+  
+<h3>Estimated Monthly EMI</h3>
+<p id="emi">EMI will appear here</p>
 
 
 
@@ -60,6 +63,10 @@ function checkRisk(){
 
 let income = document.getElementById("income").value;
 let expenses = document.getElementById("expenses").value;
+let loan = document.getElementById("loan").value;
+let tenure = document.getElementById("tenure").value;
+
+let emi = loan / tenure;
 
 let ratio = expenses / income;
 
@@ -87,6 +94,7 @@ loanType = "Only Micro Loan Recommended";
 document.getElementById("score").innerText = "Risk Score: " + score;
 document.getElementById("result").innerText = result;
 document.getElementById("loanType").innerText = loanType;
+document.getElementById("emi").innerText = "Estimated EMI: ₹" + emi;
 
 }
 

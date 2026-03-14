@@ -2,8 +2,8 @@
 <html>
 
 <head>
-  <title>Loan Eligibility</title>
-  <link rel="stylesheet" href="style.css">
+<title>Loan Eligibility</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -17,13 +17,13 @@ Monthly Expenses:<br>
 <input type="number" id="expenses"><br><br>
 
 Existing EMI:<br>
-<input type="number"><br><br>
+<input type="number" id="emi"><br><br>
 
 Loan Amount Requested:<br>
-<input type="number"><br><br>
+<input type="number" id="loan"><br><br>
 
 Loan Tenure (months):<br>
-<input type="number"><br><br>
+<input type="number" id="tenure"><br><br>
 
 
 <h3>Alternative Credit Data</h3>
@@ -41,9 +41,17 @@ Upload Mobile Bill:<br>
 <button onclick="checkRisk()">Check Eligibility</button>
 
 
-<h3>Loan Risk Result</h3>
+<h3>Risk Score</h3>
+<p id="score">Your score will appear here</p>
 
+
+<h3>Loan Risk Result</h3>
 <p id="result">Your risk result will appear here.</p>
+
+
+<h3>Loan Recommendation</h3>
+<p id="loanType">Recommended loan will appear here.</p>
+
 
 
 <script>
@@ -55,19 +63,30 @@ let expenses = document.getElementById("expenses").value;
 
 let ratio = expenses / income;
 
+let score = 0;
 let result = "";
+let loanType = "";
+
 
 if(ratio < 0.4){
+score = 80;
 result = "Low Risk Borrower";
+loanType = "Eligible for Personal Loan or Business Loan";
 }
 else if(ratio < 0.7){
+score = 60;
 result = "Medium Risk Borrower";
+loanType = "Eligible for Small Personal Loan";
 }
 else{
+score = 35;
 result = "High Risk Borrower";
+loanType = "Only Micro Loan Recommended";
 }
 
+document.getElementById("score").innerText = "Risk Score: " + score;
 document.getElementById("result").innerText = result;
+document.getElementById("loanType").innerText = loanType;
 
 }
 

@@ -8,13 +8,11 @@
 
 <h2>Loan Eligibility Check</h2>
 
-<form>
-
 Monthly Income:<br>
-<input type="number"><br><br>
+<input type="number" id="income"><br><br>
 
 Monthly Expenses:<br>
-<input type="number"><br><br>
+<input type="number" id="expenses"><br><br>
 
 Existing EMI:<br>
 <input type="number"><br><br>
@@ -25,9 +23,38 @@ Loan Amount Requested:<br>
 Loan Tenure (months):<br>
 <input type="number"><br><br>
 
-<button>Check Eligibility</button>
+<button onclick="checkRisk()">Check Eligibility</button>
 
-</form>
+<h3>Loan Risk Result</h3>
+
+<p id="result">Your risk result will appear here.</p>
+
+<script>
+
+function checkRisk(){
+
+let income = document.getElementById("income").value;
+let expenses = document.getElementById("expenses").value;
+
+let ratio = expenses / income;
+
+let result = "";
+
+if(ratio < 0.4){
+result = "Low Risk Borrower";
+}
+else if(ratio < 0.7){
+result = "Medium Risk Borrower";
+}
+else{
+result = "High Risk Borrower";
+}
+
+document.getElementById("result").innerText = result;
+
+}
+
+</script>
 
 </body>
 </html>

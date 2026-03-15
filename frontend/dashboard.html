@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html>
-<div class="topbar">
 
-<h2>FinRisk - Borrower Analytics</h2>
-
-</div>
 <head>
+
 <title>User Dashboard</title>
 
 <link rel="stylesheet" href="style.css">
@@ -14,10 +11,18 @@
 
 </head>
 
+
 <body>
+
+<!-- TOP BAR -->
+
+<div class="topbar">
+<h2>FinRisk - Borrower Analytics</h2>
+</div>
 
 
 <div class="container">
+
 
 <!-- SIDEBAR -->
 
@@ -38,6 +43,7 @@
 </div>
 
 
+
 <!-- MAIN CONTENT -->
 
 <div class="main">
@@ -51,11 +57,14 @@
 
 <h3>User Profile</h3>
 
-<p>Name : User</p>
+<p>Name : <span id="userName"></span></p>
+
 <p>Account Type : Borrower</p>
+
 <p>Status : Active</p>
 
 </div>
+
 
 <br>
 
@@ -83,6 +92,7 @@
 </div>
 
 
+
 <!-- CHARTS -->
 
 <div class="charts">
@@ -102,6 +112,7 @@
 </div>
 
 </div>
+
 
 
 <!-- POPUP FORM -->
@@ -143,6 +154,15 @@ Other<br>
 <script>
 
 
+/* Show user name */
+
+document.getElementById("userName").innerText =
+localStorage.getItem("userName");
+
+
+
+/* Show popup only first time */
+
 window.onload = function(){
 
 let formFilled = localStorage.getItem("financeFilled");
@@ -174,6 +194,10 @@ let totalExpense = transport + education + food + utilities + other;
 document.getElementById("incomeDisplay").innerText = "₹" + income;
 
 document.getElementById("expenseDisplay").innerText = "₹" + totalExpense;
+
+/* Save popup flag */
+
+localStorage.setItem("financeFilled","yes");
 
 document.getElementById("financePopup").style.display = "none";
 

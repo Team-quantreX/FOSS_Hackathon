@@ -2,33 +2,136 @@
 <html>
 
 <head>
+
 <title>Banker Dashboard</title>
+
 <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
-<h1>Banker Dashboard</h1>
+<div class="topbar">
+<h2>FinRisk - Banker Dashboard</h2>
+</div>
 
-<h2>Borrower Applications</h2>
 
-<table border="1" align="center">
+<div class="container">
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<h2>FinRisk</h2>
+
+<button onclick="location.href='banker_dashboard.html'">Dashboard</button>
+
+<button>Borrowers</button>
+
+<button>Loan Requests</button>
+
+<button>Analytics</button>
+
+<button>Logout</button>
+
+</div>
+
+
+
+<!-- MAIN CONTENT -->
+
+<div class="main">
+
+<h1>Borrower Applications</h1>
+
+
+<div class="loan-card">
+
+<table border="1" width="100%">
 
 <tr>
+
 <th>Name</th>
+
 <th>Income</th>
+
 <th>Risk Score</th>
-<th>Loan Decision</th>
+
+<th>Loan Type</th>
+
+<th>Decision</th>
+
 </tr>
 
+
 <tr>
-<td>Example User</td>
-<td>₹40,000</td>
-<td>Low Risk</td>
-<td>Approve</td>
+
+<td>Ravi Kumar</td>
+
+<td>₹45000</td>
+
+<td style="color:green;">78</td>
+
+<td>Personal Loan</td>
+
+<td>
+
+<button>Approve</button>
+<button>Reject</button>
+
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>Anita Sharma</td>
+
+<td>₹22000</td>
+
+<td style="color:orange;">55</td>
+
+<td>Education Loan</td>
+
+<td>
+
+<button>Approve</button>
+<button>Reject</button>
+
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>Rahul Singh</td>
+
+<td>₹15000</td>
+
+<td style="color:red;">38</td>
+
+<td>Micro Loan</td>
+
+<td>
+
+<button>Approve</button>
+<button>Reject</button>
+
+</td>
+
 </tr>
 
 </table>
+
+</div>
+
+
+</div>
+
+</div>
 
 </body>
 

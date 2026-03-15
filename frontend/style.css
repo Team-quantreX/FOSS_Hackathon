@@ -2,8 +2,8 @@
 
 body{
 font-family: Georgia, serif;
-background: linear-gradient(135deg,#0f0f0f,#e6d5b8);
-color:Silver (#CCCCCC);
+background:#0F1114;
+color:#DADFE6;
 margin:0;
 text-align:center;
 }
@@ -29,8 +29,8 @@ font-size:20px;
 /* Buttons */
 
 button{
-background:#3b3b3b;
-color:white;
+background:#3B4048;
+color:#DADFE6;
 padding:15px;
 width:220px;
 border:none;
@@ -116,7 +116,7 @@ display:flex;
 
 .sidebar{
 width:220px;
-background:#111;
+background:#23262B;
 height:100vh;
 padding:20px;
 position:fixed;
@@ -155,7 +155,7 @@ padding:30px;
 /* Profile Card */
 
 .profile-card{
-background:#1c1c1c;
+background:#23262B;
 padding:20px;
 border-radius:10px;
 width:250px;
@@ -167,7 +167,7 @@ margin:auto;
 /* Financial Summary Card */
 
 .loan-card{
-background:#1c1c1c;
+background:#23262B;
 padding:20px;
 border-radius:10px;
 width:400px;

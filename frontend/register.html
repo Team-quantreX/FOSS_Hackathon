@@ -30,10 +30,33 @@ Address:<br>
 <input type="text"><br><br>
 
 <button onclick="location.href='dashboard.html'">
-Register
-</button>
+<button onclick="registerUser()">Register</button>
 
 </form>
 
 </body>
 </html>
+
+<script>
+
+function registerUser(){
+
+let name = document.getElementById("name").value;
+let email = document.getElementById("email").value;
+
+if(name == "" || email == ""){
+alert("Please fill all fields");
+return;
+}
+
+/* Save user info */
+
+localStorage.setItem("userName", name);
+
+/* Redirect to dashboard */
+
+window.location.href = "dashboard.html";
+
+}
+
+</script>

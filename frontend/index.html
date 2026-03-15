@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Borrower Risk Analyzer</title>
-    <link rel="stylesheet" href="style.css">
+<title>Borrower Risk Analyzer</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -11,15 +12,86 @@
 
 <h2>Select Role</h2>
 
-<a href="register.html">
-<button>User</button>
-</a>
+<div class="buttons">
 
-<a href="banker_dashboard.html">
-<button>Banker</button>
-</a>
-    
-<button>Admin</button>
+<button onclick="openPopup('userPopup')">👤 User</button>
+
+<button onclick="openPopup('bankerPopup')">🏦 Banker</button>
+
+<button onclick="openPopup('adminPopup')">⚙ Admin</button>
+
+</div>
+
+
+<!-- USER POPUP -->
+
+<div id="userPopup" class="popup">
+<div class="popup-content">
+
+<span class="close" onclick="closePopup('userPopup')">&times;</span>
+
+<h2>User Login</h2>
+
+<input type="text" placeholder="Phone Number"><br><br>
+<input type="password" placeholder="Password"><br><br>
+
+<button onclick="location.href='loan_check.html'">Login</button>
+
+<br><br>
+
+<button onclick="location.href='register.html'">Create Account</button>
+
+</div>
+</div>
+
+
+<!-- BANKER POPUP -->
+
+<div id="bankerPopup" class="popup">
+<div class="popup-content">
+
+<span class="close" onclick="closePopup('bankerPopup')">&times;</span>
+
+<h2>Banker Login</h2>
+
+<input type="text" placeholder="Banker ID"><br><br>
+<input type="password" placeholder="Password"><br><br>
+
+<button onclick="location.href='banker_dashboard.html'">Login</button>
+
+</div>
+</div>
+
+
+<!-- ADMIN POPUP -->
+
+<div id="adminPopup" class="popup">
+<div class="popup-content">
+
+<span class="close" onclick="closePopup('adminPopup')">&times;</span>
+
+<h2>Admin Login</h2>
+
+<input type="text" placeholder="Admin ID"><br><br>
+<input type="password" placeholder="Password"><br><br>
+
+<button>Login</button>
+
+</div>
+</div>
+
+
+<script>
+
+function openPopup(id){
+document.getElementById(id).style.display = "block";
+}
+
+function closePopup(id){
+document.getElementById(id).style.display = "none";
+}
+
+</script>
 
 </body>
 </html>

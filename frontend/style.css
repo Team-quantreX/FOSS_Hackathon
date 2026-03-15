@@ -1,8 +1,8 @@
 /* Whole Website Styling */
 body{
 font-family: Georgia, serif;
-background: linear-gradient(135deg,#1a1a1a,#f5e6d3);
-color:#ffffff;
+background: linear-gradient(135deg,#0f0f0f,#e6d5b8);
+color:white;
 margin:0;
 text-align:center;
 }
@@ -114,4 +114,77 @@ text-align:left;
 height:20px;
 border-radius:20px;
 margin-top:10px;
+}
+
+/* Layout */
+
+.container{
+display:flex;
+}
+
+/* Sidebar */
+
+.sidebar{
+width:220px;
+background:#111;
+height:100vh;
+padding:20px;
+position:fixed;
+}
+
+.sidebar h2{
+color:#e6d5b8;
+}
+
+.sidebar button{
+display:block;
+width:100%;
+margin:15px 0;
+padding:12px;
+background:#e6d5b8;
+color:black;
+border:none;
+border-radius:6px;
+font-size:15px;
+cursor:pointer;
+}
+
+.sidebar button:hover{
+background:white;
+}
+
+/* Main dashboard */
+
+.main{
+margin-left:240px;
+padding:30px;
+}
+
+/* Profile card */
+
+.profile-card{
+background:#1c1c1c;
+padding:20px;
+border-radius:10px;
+width:250px;
+box-shadow:0 4px 10px rgba(0,0,0,0.4);
+}
+
+/* Financial card */
+
+.loan-card{
+background:#1c1c1c;
+padding:20px;
+border-radius:10px;
+width:400px;
+box-shadow:0 4px 10px rgba(0,0,0,0.4);
+}
+
+/* Charts layout */
+
+.charts{
+display:flex;
+gap:40px;
+flex-wrap:wrap;
+margin-top:40px;
 }

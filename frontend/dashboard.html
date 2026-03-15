@@ -73,6 +73,12 @@
 
 <div class="loan-card">
 
+<h2>Risk Analysis</h2>
+
+<p>Risk Score : <span id="riskScore">-</span></p>
+
+<p>Risk Level : <span id="riskLevel">-</span></p>
+
 <h2>Financial Summary</h2>
 
 <table border="1">
@@ -190,6 +196,29 @@ let utilities = Number(document.getElementById("utilities").value);
 let other = Number(document.getElementById("other").value);
 
 let totalExpense = transport + education + food + utilities + other;
+
+let savings = income - totalExpense;
+
+let riskScore = 0;
+
+/* Savings ratio calculation */
+
+let savingsRatio = savings / income;
+
+/* scoring */
+
+if(savingsRatio > 0.40){
+riskScore = 85;
+}
+else if(savingsRatio > 0.25){
+riskScore = 70;
+}
+else if(savingsRatio > 0.10){
+riskScore = 55;
+}
+else{
+riskScore = 35;
+}
 
 document.getElementById("incomeDisplay").innerText = "₹" + income;
 

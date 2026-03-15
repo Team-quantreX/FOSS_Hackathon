@@ -1,50 +1,49 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <title>User Registration</title>
-  <link rel="stylesheet" href="style.css">
+<title>User Registration</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <h2>User Registration</h2>
 
-<form>
+<form onsubmit="registerUser(event)">
 
 Name:<br>
-<input type="text"><br><br>
+<input type="text" id="name"><br><br>
 
 Phone Number:<br>
-<input type="text"><br><br>
+<input type="text" id="phone"><br><br>
 
 Date of Birth:<br>
-<input type="date"><br><br>
+<input type="date" id="dob"><br><br>
 
 Aadhar Number:<br>
-<input type="text"><br><br>
+<input type="text" id="aadhar"><br><br>
 
 PAN Number:<br>
-<input type="text"><br><br>
+<input type="text" id="pan"><br><br>
 
 Address:<br>
-<input type="text"><br><br>
+<input type="text" id="address"><br><br>
 
-<button onclick="location.href='dashboard.html'">
-<button onclick="registerUser()">Register</button>
+<button type="submit">Register</button>
 
 </form>
 
-</body>
-</html>
-
 <script>
 
-function registerUser(){
+function registerUser(event){
+
+event.preventDefault();   // stops form refresh
 
 let name = document.getElementById("name").value;
-let email = document.getElementById("email").value;
+let phone = document.getElementById("phone").value;
 
-if(name == "" || email == ""){
+if(name == "" || phone == ""){
 alert("Please fill all fields");
 return;
 }
@@ -53,10 +52,13 @@ return;
 
 localStorage.setItem("userName", name);
 
-/* Redirect to dashboard */
+/* Redirect */
 
 window.location.href = "dashboard.html";
 
 }
 
 </script>
+
+</body>
+</html>

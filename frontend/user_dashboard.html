@@ -3,6 +3,7 @@
 
 <head>
 <title>User Dashboard</title>
+
 <link rel="stylesheet" href="style.css">
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -11,200 +12,8 @@
 
 <body>
 
-<h1>User Financial Dashboard</h1>
 
-
-<!-- DASHBOARD SUMMARY -->
-
-<div class="loan-card">
-
-<h2>Your Financial Summary</h2>
-
-<table border="1" align="center">
-
-<tr>
-<th>Monthly Income</th>
-<td id="incomeDisplay">-</td>
-</tr>
-
-<tr>
-<th>Total Expenses</th>
-<td id="expenseDisplay">-</td>
-</tr>
-
-</table>
-
-</div>
-
-
-<br>
-
-
-<!-- CHARTS -->
-
-<div style="display:flex;justify-content:center;gap:40px;flex-wrap:wrap;">
-
-<div style="width:350px;">
-<h3>Expense Distribution</h3>
-<canvas id="expenseChart"></canvas>
-</div>
-
-<div style="width:350px;">
-<h3>Income vs Expenses</h3>
-<canvas id="incomeChart"></canvas>
-</div>
-
-</div>
-
-
-<br><br>
-
-
-<button onclick="location.href='loan_check.html'">
-Loan Eligibility Check
-</button>
-
-<button onclick="location.href='financial_advisory.html'">
-Financial Advisory
-</button>
-
-
-
-<!-- POPUP FORM -->
-
-<div id="financePopup" class="popup">
-
-<div class="popup-content">
-
-<h2>Enter Financial Details</h2>
-
-Monthly Income<br>
-<input type="number" id="income"><br><br>
-
-<h3>Expense Categories</h3>
-
-Transportation<br>
-<input type="number" id="transport"><br><br>
-
-Education<br>
-<input type="number" id="education"><br><br>
-
-Food<br>
-<input type="number" id="food"><br><br>
-
-Utilities<br>
-<input type="number" id="utilities"><br><br>
-
-Other<br>
-<input type="number" id="other"><br><br>
-
-<button onclick="saveFinance()">Save</button>
-
-</div>
-
-</div>
-
-
-
-<script>
-
-
-// SHOW POPUP WHEN PAGE LOADS
-
-window.onload = function(){
-
-document.getElementById("financePopup").style.display = "block";
-
-}
-
-
-
-
-function saveFinance(){
-
-
-let income = Number(document.getElementById("income").value);
-
-let transport = Number(document.getElementById("transport").value);
-
-let education = Number(document.getElementById("education").value);
-
-let food = Number(document.getElementById("food").value);
-
-let utilities = Number(document.getElementById("utilities").value);
-
-let other = Number(document.getElementById("other").value);
-
-
-
-let totalExpense = transport + education + food + utilities + other;
-
-
-
-document.getElementById("incomeDisplay").innerText = "₹" + income;
-
-document.getElementById("expenseDisplay").innerText = "₹" + totalExpense;
-
-
-
-document.getElementById("financePopup").style.display = "none";
-
-
-
-createCharts(income, transport, education, food, utilities, other, totalExpense);
-
-}
-
-
-
-
-function createCharts(income, transport, education, food, utilities, other, totalExpense){
-
-
-
-new Chart(document.getElementById("expenseChart"),{
-
-type:'pie',
-
-data:{
-
-labels:["Transport","Education","Food","Utilities","Other"],
-
-datasets:[{
-
-data:[transport,education,food,utilities,other]
-
-}]
-
-}
-
-});
-
-
-
-new Chart(document.getElementById("incomeChart"),{
-
-type:'bar',
-
-data:{
-
-labels:["Income","Expenses"],
-
-datasets:[{
-
-data:[income,totalExpense]
-
-}]
-
-}
-
-});
-
-
-
-}
-
-  <div class="container">
+<div class="container">
 
 <!-- SIDEBAR -->
 
@@ -214,13 +23,9 @@ data:[income,totalExpense]
 
 <button onclick="location.href='dashboard.html'">Dashboard</button>
 
-<button onclick="location.href='loan_check.html'">
-Loan Eligibility
-</button>
+<button onclick="location.href='loan_check.html'">Loan Eligibility</button>
 
-<button onclick="location.href='financial_advisory.html'">
-Financial Advisory
-</button>
+<button onclick="location.href='financial_advisory.html'">Financial Advisory</button>
 
 <button>Profile</button>
 
@@ -243,13 +48,10 @@ Financial Advisory
 <h3>User Profile</h3>
 
 <p>Name : User</p>
-
 <p>Account Type : Borrower</p>
-
 <p>Status : Active</p>
 
 </div>
-
 
 <br>
 
@@ -298,6 +100,111 @@ Financial Advisory
 </div>
 
 
+<!-- POPUP FORM -->
+
+<div id="financePopup" class="popup">
+
+<div class="popup-content">
+
+<h2>Enter Financial Details</h2>
+
+Monthly Income<br>
+<input type="number" id="income"><br><br>
+
+<h3>Expense Categories</h3>
+
+Transportation<br>
+<input type="number" id="transport"><br><br>
+
+Education<br>
+<input type="number" id="education"><br><br>
+
+Food<br>
+<input type="number" id="food"><br><br>
+
+Utilities<br>
+<input type="number" id="utilities"><br><br>
+
+Other<br>
+<input type="number" id="other"><br><br>
+
+<button onclick="saveFinance()">Save</button>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+
+window.onload = function(){
+
+document.getElementById("financePopup").style.display = "block";
+
+}
+
+
+
+function saveFinance(){
+
+let income = Number(document.getElementById("income").value);
+
+let transport = Number(document.getElementById("transport").value);
+
+let education = Number(document.getElementById("education").value);
+
+let food = Number(document.getElementById("food").value);
+
+let utilities = Number(document.getElementById("utilities").value);
+
+let other = Number(document.getElementById("other").value);
+
+let totalExpense = transport + education + food + utilities + other;
+
+document.getElementById("incomeDisplay").innerText = "₹" + income;
+
+document.getElementById("expenseDisplay").innerText = "₹" + totalExpense;
+
+document.getElementById("financePopup").style.display = "none";
+
+createCharts(income, transport, education, food, utilities, other, totalExpense);
+
+}
+
+
+
+function createCharts(income, transport, education, food, utilities, other, totalExpense){
+
+new Chart(document.getElementById("expenseChart"),{
+
+type:'pie',
+
+data:{
+labels:["Transport","Education","Food","Utilities","Other"],
+datasets:[{
+data:[transport,education,food,utilities,other]
+}]
+}
+
+});
+
+
+new Chart(document.getElementById("incomeChart"),{
+
+type:'bar',
+
+data:{
+labels:["Income","Expenses"],
+datasets:[{
+data:[income,totalExpense]
+}]
+}
+
+});
+
+}
 
 </script>
 

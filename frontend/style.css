@@ -1,11 +1,10 @@
 /* Whole Website Styling */
 body{
 font-family: Georgia, serif;
-background: linear-gradient(135deg,#f5f0e6,#d8cfc4);
+background: linear-gradient(135deg,#1a1a1a,#f5e6d3);
+color:#ffffff;
 margin:0;
-padding:0;
 text-align:center;
-color:#2c2c2c;
 }
 
 

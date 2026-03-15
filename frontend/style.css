@@ -2,8 +2,8 @@
 
 body{
 font-family: Georgia, serif;
-background:#0F1114;
-color:#DADFE6;
+background: linear-gradient(135deg,#0f0f0f,#1f1f1f,#e6d5b8);
+color:#EAEAEA;
 margin:0;
 text-align:center;
 }
@@ -81,12 +81,23 @@ background:rgba(0,0,0,0.6);
 }
 
 .popup-content{
-background:#fff8f0;
+background:#1c1c1c;
+color:white;
 padding:30px;
-width:320px;
+width:350px;
 margin:120px auto;
-border-radius:12px;
-box-shadow:0 10px 25px rgba(0,0,0,0.3);
+border-radius:15px;
+box-shadow:0 15px 40px rgba(0,0,0,0.5);
+}
+
+.popup-content input{
+background:#2a2a2a;
+color:Gold;
+border:1px solid #555;
+}
+
+.popup-content h2{
+color:#e6d5b8;
 }
 
 .close{
@@ -94,6 +105,7 @@ float:right;
 font-size:22px;
 cursor:pointer;
 }
+
 
 
 /* Risk Bar */
@@ -167,12 +179,12 @@ margin:auto;
 /* Financial Summary Card */
 
 .loan-card{
-background:#23262B;
-padding:20px;
-border-radius:10px;
-width:400px;
-box-shadow:0 4px 10px rgba(0,0,0,0.4);
-margin:40px auto;
+background: rgba(255,255,255,0.05);
+backdrop-filter: blur(10px);
+padding:25px;
+border-radius:15px;
+box-shadow:0 8px 20px rgba(0,0,0,0.3);
+margin:auto;
 }
 
 

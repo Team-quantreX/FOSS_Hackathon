@@ -5,7 +5,7 @@ font-family: Georgia, serif;
 background: linear-gradient(135deg,#0f0f0f,#1f1f1f,#e6d5b8);
 color:#EAEAEA;
 margin:0;
-min-height:100vh;
+height:100%;
 padding:0;
 text-align:center;
 }
@@ -95,7 +95,7 @@ box-shadow:0 15px 40px rgba(0,0,0,0.5);
 
 .popup-content input{
 background:#2a2a2a;
-color:Gold;
+color:Light Grey;
 border:1px solid #555;
 }
 

@@ -1,4 +1,5 @@
 /* Whole Website Styling */
+
 body{
 font-family: Georgia, serif;
 background: linear-gradient(135deg,#0f0f0f,#e6d5b8);
@@ -8,7 +9,7 @@ text-align:center;
 }
 
 
-/* Heading Style */
+/* Headings */
 
 h1{
 margin-top:40px;
@@ -95,19 +96,6 @@ cursor:pointer;
 }
 
 
-/* Loan Eligibility Card */
-
-.loan-card{
-background:#fff8f0;
-width:500px;
-margin:50px auto;
-padding:30px;
-border-radius:15px;
-box-shadow:0 15px 30px rgba(0,0,0,0.2);
-text-align:left;
-}
-
-
 /* Risk Bar */
 
 #riskColor{
@@ -116,11 +104,13 @@ border-radius:20px;
 margin-top:10px;
 }
 
-/* Layout */
+
+/* Dashboard Layout */
 
 .container{
 display:flex;
 }
+
 
 /* Sidebar */
 
@@ -153,14 +143,16 @@ cursor:pointer;
 background:white;
 }
 
-/* Main dashboard */
+
+/* Main Dashboard Area */
 
 .main{
 margin-left:240px;
 padding:30px;
 }
 
-/* Profile card */
+
+/* Profile Card */
 
 .profile-card{
 background:#1c1c1c;
@@ -168,9 +160,11 @@ padding:20px;
 border-radius:10px;
 width:250px;
 box-shadow:0 4px 10px rgba(0,0,0,0.4);
+margin:auto;
 }
 
-/* Financial card */
+
+/* Financial Summary Card */
 
 .loan-card{
 background:#1c1c1c;
@@ -178,12 +172,15 @@ padding:20px;
 border-radius:10px;
 width:400px;
 box-shadow:0 4px 10px rgba(0,0,0,0.4);
+margin:40px auto;
 }
 
-/* Charts layout */
+
+/* Charts Layout */
 
 .charts{
 display:flex;
+justify-content:center;
 gap:40px;
 flex-wrap:wrap;
 margin-top:40px;

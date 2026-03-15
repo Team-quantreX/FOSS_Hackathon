@@ -141,7 +141,11 @@ Other<br>
 
 window.onload = function(){
 
-document.getElementById("financePopup").style.display = "block";
+let formFilled = localStorage.getItem("financeFilled");
+
+if(!formFilled){
+document.getElementById("financePopup").style.display="block";
+}
 
 }
 

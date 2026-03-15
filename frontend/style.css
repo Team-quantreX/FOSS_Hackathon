@@ -31,20 +31,21 @@ font-size:20px;
 /* Buttons */
 
 button{
-background:#3B4048;
-color:#DADFE6;
-padding:15px;
+background:linear-gradient(135deg,#e6d5b8,#bfa980);
+color:#111;
+padding:14px;
 width:220px;
 border:none;
 border-radius:8px;
-font-size:18px;
+font-size:16px;
 cursor:pointer;
-transition:0.3s;
+transition:all 0.3s ease;
+font-weight:bold;
 }
 
 button:hover{
-background:#000000;
 transform:scale(1.05);
+box-shadow:0 8px 20px rgba(0,0,0,0.4);
 }
 
 
@@ -181,12 +182,19 @@ margin:auto;
 /* Financial Summary Card */
 
 .loan-card{
-background: rgba(255,255,255,0.05);
-backdrop-filter: blur(10px);
-padding:25px;
+background: rgba(255,255,255,0.06);
+backdrop-filter: blur(8px);
 border-radius:15px;
-box-shadow:0 8px 20px rgba(0,0,0,0.3);
-margin:auto;
+padding:25px;
+margin:30px auto;
+box-shadow:0 10px 25px rgba(0,0,0,0.4);
+width:450px;
+transition:0.3s;
+}
+
+.loan-card:hover{
+transform:translateY(-5px);
+box-shadow:0 20px 40px rgba(0,0,0,0.5);
 }
 
 
@@ -198,4 +206,19 @@ justify-content:center;
 gap:40px;
 flex-wrap:wrap;
 margin-top:40px;
+}
+
+.topbar{
+width:100%;
+background:#111;
+padding:15px;
+position:sticky;
+top:0;
+box-shadow:0 4px 10px rgba(0,0,0,0.4);
+}
+
+.topbar h2{
+margin:0;
+color:#e6d5b8;
+text-align:center;
 }

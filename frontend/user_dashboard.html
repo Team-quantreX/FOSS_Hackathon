@@ -1,1 +1,53 @@
+<!DOCTYPE html>
+<html>
 
+<head>
+<title>User Dashboard</title>
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<h1>User Financial Dashboard</h1>
+
+<div class="dashboard">
+
+<h2>Your Financial Summary</h2>
+
+<table border="1" align="center">
+<tr>
+<th>Monthly Income</th>
+<td id="incomeDisplay">-</td>
+</tr>
+
+<tr>
+<th>Total Expenses</th>
+<td id="expenseDisplay">-</td>
+</tr>
+</table>
+
+</div>
+
+<br><br>
+
+<div style="width:400px;margin:auto;">
+<canvas id="expenseChart"></canvas>
+</div>
+
+<br>
+
+<div style="width:400px;margin:auto;">
+<canvas id="incomeChart"></canvas>
+</div>
+
+<br><br>
+
+<button onclick="location.href='loan_check.html'">Loan Eligibility Check</button>
+
+<button onclick="location.href='financial_advisory.html'">Financial Advisory</button>
+
+</body>
+</html>

@@ -64,13 +64,14 @@ margin:5px;
 
 <script>
 
+// 📥 GET USERS FROM STORAGE
 let users = JSON.parse(localStorage.getItem("users")) || [];
 let table = document.getElementById("userTable");
+
 
 // 🎯 LOAD TABLE
 function loadTable(data){
 
-// clear old rows
 table.innerHTML = `
 <tr>
 <th>Name</th>
@@ -83,7 +84,7 @@ table.innerHTML = `
 </tr>
 `;
 
-data.forEach((u, index) => {
+data.forEach((u) => {
 
 let color = "black";
 
@@ -114,37 +115,58 @@ row.innerHTML = `
 loadTable(users);
 
 
-// 🎯 FILTER LOW RISK
+// 🟢 FILTER LOW RISK
 function filterLowRisk(){
 let filtered = users.filter(u => u.score >= 75);
 loadTable(filtered);
 }
 
-// 🎯 SHOW ALL
+// 🔄 SHOW ALL
 function showAll(){
+users = JSON.parse(localStorage.getItem("users")) || [];
 loadTable(users);
 }
 
-// 🎯 SORT BY SCORE
+// 📊 SORT BY SCORE
 function sortByScore(){
 let sorted = [...users].sort((a,b) => b.score - a.score);
 loadTable(sorted);
 }
 
 
-// ✅ APPROVE
-function approve(index){
-users[index].status = "Approved";
+// ✅ APPROVE FUNCTION (FIXED)
+function approve(id){
+
+let users = JSON.parse(localStorage.getItem("users")) || [];
+
+let user = users.find(u => u.id == id);
+
+if(user){
+user.status = "Approved";
+}
+
 localStorage.setItem("users", JSON.stringify(users));
+
 loadTable(users);
 }
 
-// ❌ REJECT
-function reject(index){
-users[index].status = "Rejected";
+
+// ❌ REJECT FUNCTION (FIXED)
+function reject(id){
+
+let users = JSON.parse(localStorage.getItem("users")) || [];
+
+let user = users.find(u => u.id == id);
+
+if(user){
+user.status = "Rejected";
+}
+
 localStorage.setItem("users", JSON.stringify(users));
+
 loadTable(users);
 }
+
 
 // 🚪 LOGOUT
 function logout(){

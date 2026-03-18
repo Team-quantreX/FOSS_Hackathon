@@ -1,10 +1,15 @@
 // ================= REGISTER =================
 function registerUser() {
-    let name = document.getElementById("name").value;
-    let phone = document.getElementById("phone").value;
-    let username = document.getElementById("username").value;
-    let password = document.getElementById("password").value;
-    let confirmPassword = document.getElementById("confirmPassword").value;
+    let name = document.getElementById("name")?.value;
+    let phone = document.getElementById("phone")?.value;
+    let username = document.getElementById("username")?.value;
+    let password = document.getElementById("password")?.value;
+    let confirmPassword = document.getElementById("confirmPassword")?.value;
+
+    if (!name || !phone || !username || !password || !confirmPassword) {
+        alert("Please fill all fields");
+        return;
+    }
 
     if (password !== confirmPassword) {
         alert("Passwords do not match!");
@@ -23,12 +28,13 @@ function registerUser() {
     localStorage.setItem(username, JSON.stringify(user));
 
     alert("Registered Successfully!");
+    window.location.href = "login.html";
 }
 
 // ================= LOGIN =================
 function loginUser() {
-    let username = document.getElementById("loginUsername").value;
-    let password = document.getElementById("loginPassword").value;
+    let username = document.getElementById("loginUsername")?.value;
+    let password = document.getElementById("loginPassword")?.value;
 
     let storedUser = JSON.parse(localStorage.getItem(username));
 
@@ -38,22 +44,27 @@ function loginUser() {
     }
 
     localStorage.setItem("currentUser", username);
+
+    // ✅ FIXED REDIRECT
     window.location.href = "dashboard.html";
 }
 
 // ================= DASHBOARD LOAD =================
-window.onload = function () {
+function loadDashboard() {
     let currentUser = localStorage.getItem("currentUser");
 
     if (!currentUser) return;
 
     let user = JSON.parse(localStorage.getItem(currentUser));
 
-    document.getElementById("riskScore").innerText = user.riskScore || 0;
-    document.getElementById("riskLevel").innerText = user.riskLevel || "New";
+    let scoreEl = document.getElementById("riskScore");
+    let levelEl = document.getElementById("riskLevel");
+
+    if (scoreEl) scoreEl.innerText = user?.riskScore || 0;
+    if (levelEl) levelEl.innerText = user?.riskLevel || "New";
 
     loadCharts();
-};
+}
 
 // ================= NAVIGATION =================
 function goToLoan() {
@@ -62,19 +73,18 @@ function goToLoan() {
 
 // ================= LOAN CALC =================
 function calculateLoan() {
-    let income = parseInt(document.getElementById("income").value) || 0;
-    let expense = parseInt(document.getElementById("expense").value) || 0;
-    let emi = parseInt(document.getElementById("existingEmi").value) || 0;
+    let income = parseInt(document.getElementById("income")?.value) || 0;
+    let expense = parseInt(document.getElementById("expense")?.value) || 0;
+    let emi = parseInt(document.getElementById("existingEmi")?.value) || 0;
 
-    let food = parseInt(document.getElementById("food").value) || 0;
-    let rent = parseInt(document.getElementById("rent").value) || 0;
-    let travel = parseInt(document.getElementById("travel").value) || 0;
-    let others = parseInt(document.getElementById("others").value) || 0;
+    let food = parseInt(document.getElementById("food")?.value) || 0;
+    let rent = parseInt(document.getElementById("rent")?.value) || 0;
+    let travel = parseInt(document.getElementById("travel")?.value) || 0;
+    let others = parseInt(document.getElementById("others")?.value) || 0;
 
     let disposable = income - expense - emi;
 
     let score = 0;
-
     if (disposable > 50000) score = 80;
     else if (disposable > 20000) score = 60;
     else score = 40;
@@ -93,26 +103,31 @@ function calculateLoan() {
         color = "red";
     }
 
-    let loanAmount = disposable * 10;
-    let emiEstimate = loanAmount / 12;
+    let loanAmount = Math.max(disposable * 10, 0);
+    let emiEstimate = Math.max(Math.round(loanAmount / 12), 0);
 
-    document.getElementById("result").innerHTML = `
-        <p>Risk Score: ${score}</p>
-        <p style="color:${color}">Risk Level: ${riskLevel}</p>
-        <p>Recommended Loan: ₹${loanAmount}</p>
-        <p>Estimated EMI: ₹${emiEstimate}</p>
-    `;
+    let resultEl = document.getElementById("result");
+
+    if (resultEl) {
+        resultEl.innerHTML = `
+            <p>Risk Score: ${score}</p>
+            <p style="color:${color}">Risk Level: ${riskLevel}</p>
+            <p>Recommended Loan: ₹${loanAmount}</p>
+            <p>Estimated EMI: ₹${emiEstimate}</p>
+        `;
+    }
 
     // SAVE USER DATA
     let currentUser = localStorage.getItem("currentUser");
     let user = JSON.parse(localStorage.getItem(currentUser));
 
-    user.riskScore = score;
-    user.riskLevel = riskLevel;
+    if (user) {
+        user.riskScore = score;
+        user.riskLevel = riskLevel;
+        localStorage.setItem(currentUser, JSON.stringify(user));
+    }
 
-    localStorage.setItem(currentUser, JSON.stringify(user));
-
-    // SAVE FOR CHART
+    // SAVE FOR CHARTS
     localStorage.setItem("income", income);
     localStorage.setItem("expense", expense);
     localStorage.setItem("food", food);
@@ -123,6 +138,8 @@ function calculateLoan() {
 
 // ================= CHARTS =================
 function loadCharts() {
+    if (typeof Chart === "undefined") return;
+
     let income = parseInt(localStorage.getItem("income")) || 0;
     let expense = parseInt(localStorage.getItem("expense")) || 0;
 
@@ -131,28 +148,32 @@ function loadCharts() {
     let travel = parseInt(localStorage.getItem("travel")) || 0;
     let others = parseInt(localStorage.getItem("others")) || 0;
 
-    // BAR CHART
-    new Chart(document.getElementById("barChart"), {
-        type: "bar",
-        data: {
-            labels: ["Income", "Expense"],
-            datasets: [{
-                label: "Finance",
-                data: [income, expense],
-                backgroundColor: ["green", "red"]
-            }]
-        }
-    });
+    let barCanvas = document.getElementById("barChart");
+    let pieCanvas = document.getElementById("pieChart");
 
-    // PIE CHART
-    new Chart(document.getElementById("pieChart"), {
-        type: "pie",
-        data: {
-            labels: ["Food", "Rent", "Travel", "Others"],
-            datasets: [{
-                data: [food, rent, travel, others],
-                backgroundColor: ["blue", "orange", "green", "purple"]
-            }]
-        }
-    });
+    if (barCanvas) {
+        new Chart(barCanvas, {
+            type: "bar",
+            data: {
+                labels: ["Income", "Expense"],
+                datasets: [{
+                    data: [income, expense],
+                    backgroundColor: ["#4CAF50", "#F44336"]
+                }]
+            }
+        });
+    }
+
+    if (pieCanvas) {
+        new Chart(pieCanvas, {
+            type: "pie",
+            data: {
+                labels: ["Food", "Rent", "Travel", "Others"],
+                datasets: [{
+                    data: [food, rent, travel, others],
+                    backgroundColor: ["#2196F3", "#FF9800", "#4CAF50", "#9C27B0"]
+                }]
+            }
+        });
+    }
 }

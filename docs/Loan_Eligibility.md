@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Loan Eligibility</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<h1>AI-Based Loan Risk Analysis System</h1>
+<div class="loan-card">
+<h2>Loan Eligibility Check</h2>
+
+Monthly Income:<br>
+<input type="number" id="income"><br><br>
+
+Monthly Expenses:<br>
+<input type="number" id="expenses"><br><br>
+
+Existing EMI:<br>
+<input type="number" id="existingEmi"><br><br>
+
+Loan Type:<br>
+<select>
+<option>Personal Loan</option>
+<option>Education Loan</option>
+<option>Business Loan</option>
+<option>Micro Loan</option>
+</select><br><br>
+
+Loan Amount Requested:<br>
+<input type="number" id="loan"><br><br>
+
+Loan Tenure (months):<br>
+<input type="number" id="tenure"><br><br>
+
+
+<h3>Alternative Credit Data</h3>
+
+Upload Rent Payment Proof:<br>
+<input type="file"><br><br>
+
+Upload Electricity Bill:<br>
+<input type="file"><br><br>
+
+Upload Mobile Bill:<br>
+<input type="file"><br><br>
+
+
+<button onclick="checkRisk()">Check Eligibility</button>
+
+
+<h3>Risk Score</h3>
+<p id="score">Your score will appear here</p>
+
+
+<h3>Loan Risk Result</h3>
+<p id="result">Your risk result will appear here.</p>
+<div id="riskColor" style="width:200px;height:20px;margin:auto;"></div>
+
+
+<h3>Loan Recommendation</h3>
+<p id="loanType">Recommended loan will appear here.</p>
+  
+
+<h3>Estimated Monthly EMI</h3>
+<p id="emiResult">EMI will appear here</p>
+
+
+
+<script>
+
+function checkRisk(){
+
+let income = document.getElementById("income").value;
+let expenses = document.getElementById("expenses").value;
+let loan = document.getElementById("loan").value;
+let tenure = document.getElementById("tenure").value;
+
+let emi = loan / tenure;
+
+let ratio = expenses / income;
+
+let score = 0;
+let result = "";
+let loanType = "";
+let color = "";
+
+if(ratio < 0.4){
+score = 80;
+result = "Low Risk Borrower";
+loanType = "Eligible for Personal Loan or Business Loan";
+color = "green";
+}
+else if(ratio < 0.7){
+score = 60;
+result = "Medium Risk Borrower";
+loanType = "Eligible for Small Personal Loan";
+color = "yellow";
+}
+else{
+score = 35;
+result = "High Risk Borrower";
+loanType = "Only Micro Loan Recommended";
+color = "red";
+}
+
+document.getElementById("riskColor").style.backgroundColor = color;
+document.getElementById("score").innerText = "Risk Score: " + score;
+document.getElementById("result").innerText = result;
+document.getElementById("loanType").innerText = loanType;
+document.getElementById("emiResult").innerText = "Estimated EMI: ₹" + emi;
+
+}
+
+</script>
+</div>
+</body>
+</html>

@@ -9,7 +9,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- ✅ POPUP CSS FIX -->
 <style>
 .popup {
     display: none;
@@ -36,7 +35,6 @@
     overflow-y: auto;
 }
 
-/* Bigger headings */
 .popup-content h3 {
     font-size: 20px;
 }
@@ -46,14 +44,12 @@
 
 <body>
 
-<!-- TOP BAR -->
 <div class="topbar">
 <h2>FinRisk - Borrower Analytics</h2>
 </div>
 
 <div class="container">
 
-<!-- SIDEBAR -->
 <div class="sidebar">
 <h2>FinRisk</h2>
 
@@ -65,12 +61,10 @@
 
 </div>
 
-<!-- MAIN CONTENT -->
 <div class="main">
 
 <h1>User Financial Dashboard</h1>
 
-<!-- PROFILE -->
 <div class="profile-card">
 <h3>User Profile</h3>
 
@@ -82,7 +76,6 @@
 
 <br>
 
-<!-- FINANCIAL SUMMARY -->
 <div class="loan-card">
 
 <h2>Risk Analysis</h2>
@@ -113,13 +106,11 @@ Risk Level :
 
 </table>
 
-<!-- ✅ RE-ENTER BUTTON (correct place) -->
 <br>
 <button onclick="openPopup()">Re-enter Expenses</button>
 
 </div>
 
-<!-- CHARTS -->
 <div class="charts">
 
 <div style="width:600px;">
@@ -137,7 +128,7 @@ Risk Level :
 </div>
 </div>
 
-<!-- POPUP FORM -->
+<!-- POPUP -->
 <div id="financePopup" class="popup">
 
 <div class="popup-content">
@@ -177,12 +168,11 @@ Other<br>
 
 <script>
 
-/* Show user name */
+/* USER NAME */
 document.getElementById("userName").innerText =
 localStorage.getItem("userName");
 
-
-/* Popup only first time */
+/* LOAD */
 window.onload = function(){
 
 let formFilled = localStorage.getItem("financeFilled");
@@ -195,7 +185,7 @@ if(formFilled === "yes"){
 
 }
 
-/* Open popup manually */
+/* OPEN POPUP */
 function openPopup(){
     document.getElementById("financePopup").classList.add("show");
 }
@@ -222,6 +212,7 @@ return;
 document.getElementById("errorMsg").innerText = "";
 }
 
+/* RISK */
 let savings = income - totalExpense;
 let savingsRatio = savings / income;
 
@@ -250,6 +241,7 @@ riskLevel = "High Risk";
 color = "red";
 }
 
+/* DISPLAY */
 document.getElementById("incomeDisplay").innerText = "₹" + income;
 document.getElementById("expenseDisplay").innerText = "₹" + totalExpense;
 
@@ -259,9 +251,8 @@ let levelEl = document.getElementById("riskLevel");
 levelEl.innerText = riskLevel;
 levelEl.style.color = color;
 
-/* SAVE */
+/* LOCAL SAVE */
 localStorage.setItem("financeFilled","yes");
-
 localStorage.setItem("income", income);
 localStorage.setItem("totalExpense", totalExpense);
 localStorage.setItem("transport", transport);
@@ -272,6 +263,23 @@ localStorage.setItem("other", other);
 localStorage.setItem("riskScore", riskScore);
 localStorage.setItem("riskLevel", riskLevel);
 localStorage.setItem("existingEmi", totalExpense * 0.2);
+
+/* 🔥 BACKEND SAVE (NEW ADDITION) */
+fetch("http://127.0.0.1:5000/save", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        name: localStorage.getItem("userName"),
+        income: income,
+        expense: totalExpense,
+        risk_score: riskScore
+    })
+})
+.then(res => res.json())
+.then(data => console.log("Saved to backend:", data))
+.catch(err => console.log("Backend error:", err));
 
 /* CLOSE */
 document.getElementById("financePopup").classList.remove("show");

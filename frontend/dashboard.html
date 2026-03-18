@@ -19,7 +19,7 @@
 <h2>FinRisk</h2>
 <button onclick="location.href='dashboard.html'">Dashboard</button>
 <button onclick="location.href='loan_check.html'">Loan Eligibility</button>
-<button>Logout</button>
+<button onclick="logout()">Logout</button>
 </div>
 
 <div class="main">
@@ -81,10 +81,6 @@ Utilities<br>
 Other<br>
 <input type="number" id="other"><br><br>
 
-<div id="extraExpenses"></div>
-
-<button onclick="addExpense()">Add Other Expense</button><br><br>
-
 <button onclick="saveFinance()">Save</button>
 
 </div>
@@ -92,34 +88,36 @@ Other<br>
 
 <script>
 
-// username
-document.getElementById("userName").innerText =
-localStorage.getItem("userName");
+// ✅ GET CURRENT USER
+let currentPhone = localStorage.getItem("currentUser");
 
-// show popup only once
+// ✅ GET ALL USERS
+let users = JSON.parse(localStorage.getItem("users")) || [];
+
+// ✅ FIND CURRENT USER
+let user = users.find(u => u.phone === currentPhone);
+
+// ✅ SHOW NAME
+if(user){
+document.getElementById("userName").innerText = user.name;
+}
+
+// ✅ ON LOAD
 window.onload = function(){
-if(localStorage.getItem("financeFilled") !== "yes"){
+
+if(user && user.income === 0){
 document.getElementById("financePopup").style.display="block";
 }
+
 loadData();
 }
 
-// open popup
+// OPEN POPUP
 function openFinancePopup(){
 document.getElementById("financePopup").style.display="block";
 }
 
-// add extra expense
-function addExpense(){
-let div = document.createElement("div");
-div.innerHTML = `
-Extra Expense<br>
-<input type="number" class="extra"><br><br>
-`;
-document.getElementById("extraExpenses").appendChild(div);
-}
-
-// save data
+// SAVE DATA
 function saveFinance(){
 
 let income = Number(document.getElementById("income").value);
@@ -129,18 +127,9 @@ let food = Number(document.getElementById("food").value);
 let utilities = Number(document.getElementById("utilities").value);
 let other = Number(document.getElementById("other").value);
 
-// extra expenses
-let extra = document.getElementsByClassName("extra");
-let extraTotal = 0;
+let totalExpense = transport + education + food + utilities + other;
 
-for(let i=0;i<extra.length;i++){
-extraTotal += Number(extra[i].value);
-}
-
-let totalExpense = transport + education + food + utilities + other + extraTotal;
-
-let savings = income - totalExpense;
-let ratio = savings / income;
+let ratio = (income - totalExpense)/income;
 
 let score;
 
@@ -149,42 +138,40 @@ else if(ratio > 0.25) score = 70;
 else if(ratio > 0.1) score = 55;
 else score = 35;
 
-// save
-localStorage.setItem("income", income);
-localStorage.setItem("expense", totalExpense);
-localStorage.setItem("score", score);
-localStorage.setItem("financeFilled", "yes");
+// ✅ SAVE INTO USER OBJECT
+user.income = income;
+user.expense = totalExpense;
+user.score = score;
 
-// close popup
+// ✅ SAVE USERS ARRAY
+localStorage.setItem("users", JSON.stringify(users));
+
+// CLOSE POPUP
 document.getElementById("financePopup").style.display="none";
 
 loadData();
 }
 
-// load data
+// LOAD DATA
 function loadData(){
 
-let income = localStorage.getItem("income");
-let expense = localStorage.getItem("expense");
-let score = localStorage.getItem("score");
+if(!user) return;
 
-if(!income) return;
+document.getElementById("incomeDisplay").innerText = "₹"+user.income;
+document.getElementById("expenseDisplay").innerText = "₹"+user.expense;
+document.getElementById("riskScore").innerText = user.score;
 
-document.getElementById("incomeDisplay").innerText = "₹"+income;
-document.getElementById("expenseDisplay").innerText = "₹"+expense;
-document.getElementById("riskScore").innerText = score;
-
-// level
+// LEVEL
 let level;
 
-if(score >= 75) level = "Low Risk";
-else if(score >= 55) level = "Medium Risk";
+if(user.score >= 75) level = "Low Risk";
+else if(user.score >= 55) level = "Medium Risk";
 else level = "High Risk";
 
 document.getElementById("riskLevel").innerText = level;
 
 // AI suggestion
-if(score < 60){
+if(user.score < 60){
 document.getElementById("advice").innerText =
 "Reduce expenses to improve score";
 }
@@ -194,10 +181,10 @@ document.getElementById("advice").innerText =
 }
 
 // charts
-createCharts(income, expense);
+createCharts(user.income, user.expense);
 }
 
-// charts
+// CHARTS
 function createCharts(income, expense){
 
 new Chart(document.getElementById("expenseChart"),{
@@ -220,6 +207,12 @@ backgroundColor:["#4CAF50","#FF5252"]
 }]
 }
 });
+}
+
+// LOGOUT
+function logout(){
+localStorage.removeItem("currentUser");
+window.location.href = "index.html";
 }
 
 </script>

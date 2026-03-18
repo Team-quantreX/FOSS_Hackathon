@@ -77,40 +77,45 @@ margin-top:60px;
 .popup {
     display: none;
     position: fixed;
-    z-index: 1000;
-    left: 0;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.6);
-
-    /* CENTERING */
-    display: flex;
+    background: rgba(0,0,0,0.6);
     justify-content: center;
     align-items: center;
 }
 
-/* POPUP BOX */
+.popup.show {
+    display: flex;
+}
+
 .popup-content {
-    background: white;
+    background: rgb(65, 58, 58);
     padding: 25px;
     border-radius: 10px;
     width: 350px;
-    text-align: center;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
-/* INPUT STYLING */
+/* 🔥 Bigger sub headings */
+.popup-content h3 {
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+/* Bigger input text */
 .popup-content input {
+    font-size: 28px;
+    padding: 6px;
     width: 90%;
-    padding: 8px;
-    margin: 5px 0;
 }
-
 /* BUTTON */
 .popup-content button {
     padding: 10px 20px;
-    background-color: #2196F3;
-    color: white;
+    background-color: #0e1922;
+    color: dark rgb(37, 32, 32);
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -157,7 +162,7 @@ background:#e6d5b8;
 color:black;
 border:none;
 border-radius:6px;
-font-size:30px;
+font-size:15px;
 cursor:pointer;
 }
 

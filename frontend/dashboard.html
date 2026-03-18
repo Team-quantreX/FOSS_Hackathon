@@ -9,6 +9,39 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<!-- ✅ POPUP CSS FIX -->
+<style>
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+}
+
+.popup.show {
+    display: flex;
+}
+
+.popup-content {
+    background: rgb(70, 63, 63);
+    padding: 25px;
+    border-radius: 10px;
+    width: 350px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* Bigger headings */
+.popup-content h3 {
+    font-size: 20px;
+}
+</style>
+
 </head>
 
 <body>
@@ -54,14 +87,14 @@
 
 <h2>Risk Analysis</h2>
 
-<p style="font-size:18px;">
+<p style="font-size:28px;">
 Risk Score : 
-<span id="riskScore" style="font-size:22px; font-weight:bold; color:#2196F3;">0</span>
+<span id="riskScore" style="font-size:28px; font-weight:bold; color:#71787e;">0</span>
 </p>
 
-<p style="font-size:18px;">
+<p style="font-size:28px;">
 Risk Level : 
-<span id="riskLevel" style="font-size:20px; font-weight:bold;">New</span>
+<span id="riskLevel" style="font-size:28px; font-weight:bold;">New</span>
 </p>
 
 <h2>Financial Summary</h2>
@@ -70,27 +103,31 @@ Risk Level :
 
 <tr>
 <th>Monthly Income</th>
-<td id="incomeDisplay" style="color:green; font-size:18px;">-</td>
+<td id="incomeDisplay" style="color:rgb(115, 58, 121); font-size:28px;">-</td>
 </tr>
 
 <tr>
 <th>Total Expenses</th>
-<td id="expenseDisplay" style="color:red; font-size:18px;">-</td>
+<td id="expenseDisplay" style="color:rgb(139, 97, 97); font-size:28px;">-</td>
 </tr>
 
 </table>
+
+<!-- ✅ RE-ENTER BUTTON (correct place) -->
+<br>
+<button onclick="openPopup()">Re-enter Expenses</button>
 
 </div>
 
 <!-- CHARTS -->
 <div class="charts">
 
-<div style="width:500px;">
+<div style="width:600px;">
 <h3>Expense Distribution</h3>
 <canvas id="expenseChart"></canvas>
 </div>
 
-<div style="width:500px;">
+<div style="width:700px;">
 <h3>Income vs Expenses</h3>
 <canvas id="incomeChart"></canvas>
 </div>
@@ -132,9 +169,10 @@ Other<br>
 
 <p id="errorMsg" style="color:red;"></p>
 
-<button onclick="saveFinance()">Save</button>
+<button onclick="saveFinance()" style="padding:10px; font-size:28px;">Save</button>
 
 </div>
+
 </div>
 
 <script>
@@ -143,21 +181,26 @@ Other<br>
 document.getElementById("userName").innerText =
 localStorage.getItem("userName");
 
-/* Show popup only first time */
+
+/* Popup only first time */
 window.onload = function(){
 
 let formFilled = localStorage.getItem("financeFilled");
 
-if(!formFilled){
-document.getElementById("financePopup").style.display="flex";
-}
-else{
-loadSavedData(); // ✅ LOAD DATA AFTER REFRESH
-}
-
+if(formFilled === "yes"){
+    loadSavedData();
+}else{
+    document.getElementById("financePopup").classList.add("show");
 }
 
-/* SAVE FINANCE */
+}
+
+/* Open popup manually */
+function openPopup(){
+    document.getElementById("financePopup").classList.add("show");
+}
+
+/* SAVE */
 function saveFinance(){
 
 let income = Number(document.getElementById("income").value);
@@ -169,10 +212,8 @@ let food = Number(document.getElementById("food").value);
 let utilities = Number(document.getElementById("utilities").value);
 let other = Number(document.getElementById("other").value);
 
-/* SUM OF DISTRIBUTION */
 let sumBreakdown = transport + education + food + utilities + other;
 
-/* VALIDATION */
 if(sumBreakdown !== totalExpense){
 document.getElementById("errorMsg").innerText =
 "⚠ Total distribution must equal Total Expenses!";
@@ -181,7 +222,6 @@ return;
 document.getElementById("errorMsg").innerText = "";
 }
 
-/* CALCULATION */
 let savings = income - totalExpense;
 let savingsRatio = savings / income;
 
@@ -210,7 +250,6 @@ riskLevel = "High Risk";
 color = "red";
 }
 
-/* DISPLAY */
 document.getElementById("incomeDisplay").innerText = "₹" + income;
 document.getElementById("expenseDisplay").innerText = "₹" + totalExpense;
 
@@ -220,7 +259,7 @@ let levelEl = document.getElementById("riskLevel");
 levelEl.innerText = riskLevel;
 levelEl.style.color = color;
 
-/* SAVE EVERYTHING */
+/* SAVE */
 localStorage.setItem("financeFilled","yes");
 
 localStorage.setItem("income", income);
@@ -232,16 +271,17 @@ localStorage.setItem("utilities", utilities);
 localStorage.setItem("other", other);
 localStorage.setItem("riskScore", riskScore);
 localStorage.setItem("riskLevel", riskLevel);
+localStorage.setItem("existingEmi", totalExpense * 0.2);
 
-/* CLOSE POPUP */
-document.getElementById("financePopup").style.display = "none";
+/* CLOSE */
+document.getElementById("financePopup").classList.remove("show");
 
 /* CHARTS */
 createCharts(income, transport, education, food, utilities, other, totalExpense);
 
 }
 
-/* LOAD SAVED DATA AFTER REFRESH */
+/* LOAD */
 function loadSavedData(){
 
 let income = Number(localStorage.getItem("income")) || 0;
@@ -256,7 +296,6 @@ let other = Number(localStorage.getItem("other")) || 0;
 let riskScore = localStorage.getItem("riskScore") || 0;
 let riskLevel = localStorage.getItem("riskLevel") || "New";
 
-/* DISPLAY */
 document.getElementById("incomeDisplay").innerText = "₹" + income;
 document.getElementById("expenseDisplay").innerText = "₹" + totalExpense;
 
@@ -265,12 +304,10 @@ document.getElementById("riskScore").innerText = riskScore;
 let levelEl = document.getElementById("riskLevel");
 levelEl.innerText = riskLevel;
 
-/* COLOR AGAIN */
 if(riskLevel === "Low Risk") levelEl.style.color = "green";
 else if(riskLevel === "Medium Risk") levelEl.style.color = "orange";
 else levelEl.style.color = "red";
 
-/* CHARTS AGAIN */
 createCharts(income, transport, education, food, utilities, other, totalExpense);
 
 }
@@ -278,29 +315,20 @@ createCharts(income, transport, education, food, utilities, other, totalExpense)
 /* CHARTS */
 function createCharts(income, transport, education, food, utilities, other, totalExpense){
 
-// 🔥 DESTROY OLD CHARTS (important fix)
 if(window.expenseChartObj) window.expenseChartObj.destroy();
 if(window.incomeChartObj) window.incomeChartObj.destroy();
 
-/* PIE CHART */
 window.expenseChartObj = new Chart(document.getElementById("expenseChart"),{
 type:'pie',
 data:{
 labels:["Transport","Education","Food","Utilities","Other"],
 datasets:[{
 data:[transport,education,food,utilities,other],
-backgroundColor:[
-"#FF6384",
-"#36A2EB",
-"#FFCE56",
-"#4CAF50",
-"#9C27B0"
-]
+backgroundColor:["#FF6384","#36A2EB","#FFCE56","#4CAF50","#9C27B0"]
 }]
 }
 });
 
-/* BAR CHART */
 window.incomeChartObj = new Chart(document.getElementById("incomeChart"),{
 type:'bar',
 data:{
@@ -311,8 +339,6 @@ backgroundColor:["#4CAF50","#F44336"]
 }]
 }
 });
-
-}
 
 }
 

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>User Dashboard</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+
+<body>
+
+<!-- TOP BAR -->
+
+<div class="topbar">
+<h2>FinRisk - Borrower Analytics</h2>
+</div>
+
+
+<div class="container">
+
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<h2>FinRisk</h2>
+
+<button onclick="location.href='dashboard.html'">Dashboard</button>
+
+<button onclick="location.href='loan_check.html'">Loan Eligibility</button>
+
+<button onclick="location.href='financial_advisory.html'">Financial Advisory</button>
+
+<button>Profile</button>
+
+<button>Logout</button>
+
+</div>
+
+
+
+<!-- MAIN CONTENT -->
+
+<div class="main">
+
+<h1>User Financial Dashboard</h1>
+
+
+<!-- PROFILE -->
+
+<div class="profile-card">
+
+<h3>User Profile</h3>
+
+<p>Name : <span id="userName"></span></p>
+
+<p>Account Type : Borrower</p>
+
+<p>Status : Active</p>
+
+</div>
+
+
+<br>
+
+
+<!-- FINANCIAL SUMMARY -->
+
+<div class="loan-card">
+
+<h2>Risk Analysis</h2>
+
+<p>Risk Score : <span id="riskScore">-</span></p>
+
+<p>Risk Level : <span id="riskLevel">-</span></p>
+
+<h2>Financial Summary</h2>
+
+<table border="1">
+
+<tr>
+<th>Monthly Income</th>
+<td id="incomeDisplay">-</td>
+</tr>
+
+<tr>
+<th>Total Expenses</th>
+<td id="expenseDisplay">-</td>
+</tr>
+
+</table>
+
+</div>
+
+
+
+<!-- CHARTS -->
+
+<div class="charts">
+
+<div style="width:500px;">
+<h3>Expense Distribution</h3>
+<canvas id="expenseChart"></canvas>
+</div>
+
+<div style="width:500px;">
+<h3>Income vs Expenses</h3>
+<canvas id="incomeChart"></canvas>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- POPUP FORM -->
+
+<div id="financePopup" class="popup">
+
+<div class="popup-content">
+
+<h2>Enter Financial Details</h2>
+
+Monthly Income<br>
+<input type="number" id="income"><br><br>
+
+<h3>Expense Categories</h3>
+
+Transportation<br>
+<input type="number" id="transport"><br><br>
+
+Education<br>
+<input type="number" id="education"><br><br>
+
+Food<br>
+<input type="number" id="food"><br><br>
+
+Utilities<br>
+<input type="number" id="utilities"><br><br>
+
+Other<br>
+<input type="number" id="other"><br><br>
+
+<button onclick="saveFinance()">Save</button>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+
+/* Show user name */
+
+document.getElementById("userName").innerText =
+localStorage.getItem("userName");
+
+
+
+/* Show popup only first time */
+
+window.onload = function(){
+
+let formFilled = localStorage.getItem("financeFilled");
+
+if(!formFilled){
+document.getElementById("financePopup").style.display="block";
+}
+
+}
+
+
+
+function saveFinance(){
+
+let income = Number(document.getElementById("income").value);
+
+let transport = Number(document.getElementById("transport").value);
+
+let education = Number(document.getElementById("education").value);
+
+let food = Number(document.getElementById("food").value);
+
+let utilities = Number(document.getElementById("utilities").value);
+
+let other = Number(document.getElementById("other").value);
+
+let totalExpense = transport + education + food + utilities + other;
+
+let savings = income - totalExpense;
+
+let riskScore = 0;
+
+/* Savings ratio calculation */
+
+let savingsRatio = savings / income;
+
+/* scoring */
+
+if(savingsRatio > 0.40){
+riskScore = 85;
+}
+else if(savingsRatio > 0.25){
+riskScore = 70;
+}
+else if(savingsRatio > 0.10){
+riskScore = 55;
+}
+else{
+riskScore = 35;
+}
+
+document.getElementById("incomeDisplay").innerText = "₹" + income;
+
+document.getElementById("expenseDisplay").innerText = "₹" + totalExpense;
+
+/* Save popup flag */
+
+localStorage.setItem("financeFilled","yes");
+
+document.getElementById("financePopup").style.display = "none";
+
+createCharts(income, transport, education, food, utilities, other, totalExpense);
+
+}
+
+
+
+function createCharts(income, transport, education, food, utilities, other, totalExpense){
+
+new Chart(document.getElementById("expenseChart"),{
+
+type:'pie',
+
+data:{
+labels:["Transport","Education","Food","Utilities","Other"],
+datasets:[{
+data:[transport,education,food,utilities,other]
+}]
+}
+
+});
+
+
+new Chart(document.getElementById("incomeChart"),{
+
+type:'bar',
+
+data:{
+labels:["Income","Expenses"],
+datasets:[{
+data:[income,totalExpense]
+}]
+}
+
+});
+
+}
+
+</script>
+
+</body>
+
+</html>

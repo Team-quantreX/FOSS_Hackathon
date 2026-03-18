@@ -4,6 +4,18 @@
 <head>
 <title>Banker Dashboard</title>
 <link rel="stylesheet" href="style.css">
+
+<style>
+.controls{
+margin:20px;
+text-align:center;
+}
+
+.controls button{
+margin:5px;
+}
+</style>
+
 </head>
 
 <body>
@@ -23,6 +35,13 @@
 <div class="main">
 
 <h1>Borrower Applications</h1>
+
+<!-- 🔥 CONTROLS -->
+<div class="controls">
+<button onclick="showAll()">Show All</button>
+<button onclick="filterLowRisk()">Low Risk Only</button>
+<button onclick="sortByScore()">Sort by Score</button>
+</div>
 
 <div class="loan-card">
 
@@ -45,13 +64,32 @@
 
 <script>
 
-// GET USERS
 let users = JSON.parse(localStorage.getItem("users")) || [];
-
 let table = document.getElementById("userTable");
 
-// LOAD USERS INTO TABLE
-users.forEach((u, index) => {
+// 🎯 LOAD TABLE
+function loadTable(data){
+
+// clear old rows
+table.innerHTML = `
+<tr>
+<th>Name</th>
+<th>Phone</th>
+<th>Income</th>
+<th>Expense</th>
+<th>Risk Score</th>
+<th>Status</th>
+<th>Decision</th>
+</tr>
+`;
+
+data.forEach((u, index) => {
+
+let color = "black";
+
+if(u.score >= 75) color = "green";
+else if(u.score >= 55) color = "orange";
+else color = "red";
 
 let row = table.insertRow();
 
@@ -60,7 +98,7 @@ row.innerHTML = `
 <td>${u.phone}</td>
 <td>₹${u.income || 0}</td>
 <td>₹${u.expense || 0}</td>
-<td>${u.score || 0}</td>
+<td style="color:${color}; font-weight:bold;">${u.score || 0}</td>
 <td id="status-${index}">${u.status || "Pending"}</td>
 <td>
 <button onclick="approve(${index})">Approve</button>
@@ -70,29 +108,45 @@ row.innerHTML = `
 
 });
 
-// APPROVE FUNCTION
+}
+
+// ✅ INITIAL LOAD
+loadTable(users);
+
+
+// 🎯 FILTER LOW RISK
+function filterLowRisk(){
+let filtered = users.filter(u => u.score >= 75);
+loadTable(filtered);
+}
+
+// 🎯 SHOW ALL
+function showAll(){
+loadTable(users);
+}
+
+// 🎯 SORT BY SCORE
+function sortByScore(){
+let sorted = [...users].sort((a,b) => b.score - a.score);
+loadTable(sorted);
+}
+
+
+// ✅ APPROVE
 function approve(index){
-
 users[index].status = "Approved";
-
 localStorage.setItem("users", JSON.stringify(users));
-
-document.getElementById(`status-${index}`).innerText = "Approved";
-
+loadTable(users);
 }
 
-// REJECT FUNCTION
+// ❌ REJECT
 function reject(index){
-
 users[index].status = "Rejected";
-
 localStorage.setItem("users", JSON.stringify(users));
-
-document.getElementById(`status-${index}`).innerText = "Rejected";
-
+loadTable(users);
 }
 
-// LOGOUT
+// 🚪 LOGOUT
 function logout(){
 window.location.href = "index.html";
 }

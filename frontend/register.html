@@ -39,6 +39,7 @@ let users = JSON.parse(localStorage.getItem("users")) || [];
 
 // create new user
 let newUser = {
+id: Date.now()
 name:name,
 phone:phone,
 income:0,

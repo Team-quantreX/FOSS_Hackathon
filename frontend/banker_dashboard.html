@@ -1,42 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Banker Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="topbar">
+<h2>FinRisk - Banker Dashboard</h2>
+</div>
+
+<div class="container">
+
+<div class="sidebar">
+<h2>FinRisk</h2>
+<button onclick="location.href='banker_dashboard.html'">Dashboard</button>
+<button onclick="logout()">Logout</button>
+</div>
+
+<div class="main">
+
+<h1>Borrower Applications</h1>
+
+<div class="loan-card">
+
 <table border="1" width="100%" id="userTable">
 <tr>
 <th>Name</th>
 <th>Phone</th>
 <th>Income</th>
-<th>Score</th>
+<th>Expense</th>
+<th>Risk Score</th>
+<th>Status</th>
 <th>Decision</th>
 </tr>
 </table>
 
+</div>
+
+</div>
+</div>
+
 <script>
 
+// GET USERS
 let users = JSON.parse(localStorage.getItem("users")) || [];
 
 let table = document.getElementById("userTable");
 
-users.forEach(u => {
+// LOAD USERS INTO TABLE
+users.forEach((u, index) => {
 
 let row = table.insertRow();
 
 row.innerHTML = `
 <td>${u.name}</td>
 <td>${u.phone}</td>
-<td>₹${u.income}</td>
-<td>${u.score}</td>
+<td>₹${u.income || 0}</td>
+<td>₹${u.expense || 0}</td>
+<td>${u.score || 0}</td>
+<td id="status-${index}">${u.status || "Pending"}</td>
 <td>
-<button onclick="approve()">Approve</button>
-<button onclick="reject()">Reject</button>
+<button onclick="approve(${index})">Approve</button>
+<button onclick="reject(${index})">Reject</button>
 </td>
 `;
 
 });
 
-function approve(){
-alert("Loan Approved");
+// APPROVE FUNCTION
+function approve(index){
+
+users[index].status = "Approved";
+
+localStorage.setItem("users", JSON.stringify(users));
+
+document.getElementById(`status-${index}`).innerText = "Approved";
+
 }
 
-function reject(){
-alert("Loan Rejected");
+// REJECT FUNCTION
+function reject(index){
+
+users[index].status = "Rejected";
+
+localStorage.setItem("users", JSON.stringify(users));
+
+document.getElementById(`status-${index}`).innerText = "Rejected";
+
+}
+
+// LOGOUT
+function logout(){
+window.location.href = "index.html";
 }
 
 </script>
+
+</body>
+</html>

@@ -11,73 +11,58 @@
 
 </head>
 
-
 <body>
 
 <!-- TOP BAR -->
-
 <div class="topbar">
 <h2>FinRisk - Borrower Analytics</h2>
 </div>
 
-
 <div class="container">
 
-
 <!-- SIDEBAR -->
-
 <div class="sidebar">
-
 <h2>FinRisk</h2>
 
 <button onclick="location.href='dashboard.html'">Dashboard</button>
-
 <button onclick="location.href='loan_check.html'">Loan Eligibility</button>
-
 <button onclick="location.href='financial_advisory.html'">Financial Advisory</button>
-
 <button>Profile</button>
-
 <button>Logout</button>
 
 </div>
 
-
-
 <!-- MAIN CONTENT -->
-
 <div class="main">
 
 <h1>User Financial Dashboard</h1>
 
-
 <!-- PROFILE -->
-
 <div class="profile-card">
-
 <h3>User Profile</h3>
 
 <p>Name : <span id="userName"></span></p>
-
 <p>Account Type : Borrower</p>
-
 <p>Status : Active</p>
 
 </div>
 
-
 <br>
 
-
 <!-- FINANCIAL SUMMARY -->
-
 <div class="loan-card">
 
 <h2>Risk Analysis</h2>
 
-<p>Risk Score : <span id="riskScore">-</span></p>
+<p style="font-size:18px;">
+Risk Score : 
+<span id="riskScore" style="font-size:22px; font-weight:bold; color:#2196F3;">0</span>
+</p>
 
-<p>Risk Level : <span id="riskLevel">-</span></p>
+<p style="font-size:18px;">
+Risk Level : 
+<span id="riskLevel" style="font-size:20px; font-weight:bold;">New</span>
+</p>
 
 <h2>Financial Summary</h2>
 
@@ -85,22 +70,19 @@
 
 <tr>
 <th>Monthly Income</th>
-<td id="incomeDisplay">-</td>
+<td id="incomeDisplay" style="color:green; font-size:18px;">-</td>
 </tr>
 
 <tr>
 <th>Total Expenses</th>
-<td id="expenseDisplay">-</td>
+<td id="expenseDisplay" style="color:red; font-size:18px;">-</td>
 </tr>
 
 </table>
 
 </div>
 
-
-
 <!-- CHARTS -->
-
 <div class="charts">
 
 <div style="width:500px;">
@@ -116,13 +98,9 @@
 </div>
 
 </div>
-
 </div>
 
-
-
 <!-- POPUP FORM -->
-
 <div id="financePopup" class="popup">
 
 <div class="popup-content">
@@ -152,117 +130,126 @@ Other<br>
 <button onclick="saveFinance()">Save</button>
 
 </div>
-
 </div>
-
-
 
 <script>
 
-
 /* Show user name */
-
 document.getElementById("userName").innerText =
 localStorage.getItem("userName");
 
-
-
 /* Show popup only first time */
-
 window.onload = function(){
-
 let formFilled = localStorage.getItem("financeFilled");
 
 if(!formFilled){
 document.getElementById("financePopup").style.display="block";
 }
-
 }
 
-
-
+/* SAVE FINANCE */
 function saveFinance(){
 
 let income = Number(document.getElementById("income").value);
 
 let transport = Number(document.getElementById("transport").value);
-
 let education = Number(document.getElementById("education").value);
-
 let food = Number(document.getElementById("food").value);
-
 let utilities = Number(document.getElementById("utilities").value);
-
 let other = Number(document.getElementById("other").value);
 
 let totalExpense = transport + education + food + utilities + other;
 
 let savings = income - totalExpense;
 
-let riskScore = 0;
-
-/* Savings ratio calculation */
-
+/* RISK SCORE */
 let savingsRatio = savings / income;
 
-/* scoring */
+let riskScore = 0;
+let riskLevel = "";
+let color = "";
 
 if(savingsRatio > 0.40){
 riskScore = 85;
+riskLevel = "Low Risk";
+color = "green";
 }
 else if(savingsRatio > 0.25){
 riskScore = 70;
+riskLevel = "Medium Risk";
+color = "orange";
 }
 else if(savingsRatio > 0.10){
 riskScore = 55;
+riskLevel = "Medium Risk";
+color = "orange";
 }
 else{
 riskScore = 35;
+riskLevel = "High Risk";
+color = "red";
 }
 
+/* DISPLAY VALUES */
 document.getElementById("incomeDisplay").innerText = "₹" + income;
-
 document.getElementById("expenseDisplay").innerText = "₹" + totalExpense;
 
-/* Save popup flag */
+document.getElementById("riskScore").innerText = riskScore;
 
+let levelEl = document.getElementById("riskLevel");
+levelEl.innerText = riskLevel;
+levelEl.style.color = color;
+
+/* SAVE */
 localStorage.setItem("financeFilled","yes");
 
+/* CLOSE POPUP */
 document.getElementById("financePopup").style.display = "none";
 
+/* CREATE CHARTS */
 createCharts(income, transport, education, food, utilities, other, totalExpense);
-
 }
 
-
-
+/* CHARTS */
 function createCharts(income, transport, education, food, utilities, other, totalExpense){
 
+/* PIE CHART (FIXED COLORS) */
 new Chart(document.getElementById("expenseChart"),{
-
 type:'pie',
-
 data:{
 labels:["Transport","Education","Food","Utilities","Other"],
 datasets:[{
-data:[transport,education,food,utilities,other]
+data:[transport,education,food,utilities,other],
+backgroundColor:[
+"#FF6384",
+"#36A2EB",
+"#FFCE56",
+"#4CAF50",
+"#9C27B0"
+]
 }]
 }
-
 });
 
-
+/* BAR CHART (COLORED) */
 new Chart(document.getElementById("incomeChart"),{
-
 type:'bar',
-
 data:{
 labels:["Income","Expenses"],
 datasets:[{
-data:[income,totalExpense]
+data:[income,totalExpense],
+backgroundColor:["#4CAF50","#F44336"]
 }]
+},
+options:{
+plugins:{
+legend:{
+labels:{
+font:{size:14}
 }
-
+}
+}
+}
 });
 
 }
@@ -270,5 +257,4 @@ data:[income,totalExpense]
 </script>
 
 </body>
-
 </html>

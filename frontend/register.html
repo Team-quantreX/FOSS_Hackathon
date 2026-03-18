@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 <title>User Registration</title>
 <link rel="stylesheet" href="style.css">
@@ -15,20 +14,8 @@
 Name:<br>
 <input type="text" id="name"><br><br>
 
-Phone Number:<br>
+Phone:<br>
 <input type="text" id="phone"><br><br>
-
-Date of Birth:<br>
-<input type="date" id="dob"><br><br>
-
-Aadhar Number:<br>
-<input type="text" id="aadhar"><br><br>
-
-PAN Number:<br>
-<input type="text" id="pan"><br><br>
-
-Address:<br>
-<input type="text" id="address"><br><br>
 
 <button type="submit">Register</button>
 
@@ -37,25 +24,37 @@ Address:<br>
 <script>
 
 function registerUser(event){
-
-event.preventDefault();   // stops form refresh
+event.preventDefault();
 
 let name = document.getElementById("name").value;
 let phone = document.getElementById("phone").value;
 
-if(name == "" || phone == ""){
-alert("Please fill all fields");
+if(name=="" || phone==""){
+alert("Fill all fields");
 return;
 }
 
-/* Save user info */
+// get existing users
+let users = JSON.parse(localStorage.getItem("users")) || [];
 
-localStorage.setItem("userName", name);
+// create new user
+let newUser = {
+name:name,
+phone:phone,
+income:0,
+expense:0,
+score:0
+};
 
-/* Redirect */
+users.push(newUser);
 
-window.location.href = "./dashboard.html";
+// save all users
+localStorage.setItem("users", JSON.stringify(users));
 
+// store current logged user
+localStorage.setItem("currentUser", phone);
+
+window.location.href="dashboard.html";
 }
 
 </script>

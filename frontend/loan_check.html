@@ -1,85 +1,37 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-<title>Loan Eligibility</title>
-<link rel="stylesheet" href="style.css">
+    <title>Loan Check</title>
 </head>
 
 <body>
 
-<h1>Loan Eligibility Check</h1>
+<h2>Loan Eligibility Check</h2>
 
-<div class="loan-card">
+<input type="number" id="income" placeholder="Monthly Income"><br><br>
+<input type="number" id="expense" placeholder="Monthly Expense"><br><br>
+<input type="number" id="existingEmi" placeholder="Existing EMI"><br><br>
 
-Income:<br>
-<input type="number" id="income"><br><br>
+<select id="loanType">
+    <option>Personal</option>
+    <option>Home</option>
+    <option>Education</option>
+</select><br><br>
 
-Expenses:<br>
-<input type="number" id="expenses"><br><br>
+<label>Upload Alternative Credit Proof:</label><br>
+<input type="file" id="altCredit"><br><br>
 
-Loan Amount:<br>
-<input type="number" id="loan"><br><br>
+<h3>Expense Breakdown</h3>
+<input type="number" id="food" placeholder="Food"><br>
+<input type="number" id="rent" placeholder="Rent"><br>
+<input type="number" id="travel" placeholder="Travel"><br>
+<input type="number" id="others" placeholder="Others"><br><br>
 
-Tenure:<br>
-<input type="number" id="tenure"><br><br>
+<button onclick="calculateLoan()">Check Eligibility</button>
 
-<button onclick="checkRisk()">Check</button>
+<div id="result"></div>
 
-<h3 id="score"></h3>
-<h3 id="result"></h3>
-<h3 id="emi"></h3>
-
-</div>
-
-<script>
-
-function checkRisk(){
-
-let income = Number(document.getElementById("income").value);
-let expenses = Number(document.getElementById("expenses").value);
-let loan = Number(document.getElementById("loan").value);
-let tenure = Number(document.getElementById("tenure").value);
-
-let emi = loan/tenure;
-
-let ratio = expenses/income;
-
-let score, result;
-
-if(ratio<0.4){
-score=80;
-result="Low Risk";
-}
-else if(ratio<0.7){
-score=60;
-result="Medium Risk";
-}
-else{
-score=35;
-result="High Risk";
-}
-
-// show
-document.getElementById("score").innerText = "Score: "+score;
-document.getElementById("result").innerText = result;
-document.getElementById("emi").innerText = "EMI: ₹"+emi;
-
-
-// SAVE TO USER
-let currentPhone = localStorage.getItem("currentUser");
-let users = JSON.parse(localStorage.getItem("users")) || [];
-
-let user = users.find(u => u.phone === currentPhone);
-
-if(user){
-user.score = score;
-localStorage.setItem("users", JSON.stringify(users));
-}
-
-}
-
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>

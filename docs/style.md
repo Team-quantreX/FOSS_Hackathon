@@ -1,0 +1,224 @@
+/* Whole Website Styling */
+
+body{
+font-family: Georgia, serif;
+background: linear-gradient(135deg,#0f0f0f,#1f1f1f,#e6d5b8);
+color:#EAEAEA;
+margin:0;
+height:100%;
+padding:0;
+text-align:center;
+}
+
+
+/* Headings */
+
+h1{
+margin-top:40px;
+font-size:40px;
+letter-spacing:1px;
+}
+
+h2{
+font-size:28px;
+}
+
+h3{
+font-size:20px;
+}
+
+
+/* Buttons */
+
+button{
+background:linear-gradient(135deg,#e6d5b8,#bfa980);
+color:#111;
+padding:14px;
+width:220px;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+transition:all 0.3s ease;
+font-weight:bold;
+}
+
+button:hover{
+transform:scale(1.05);
+box-shadow:0 8px 20px rgba(0,0,0,0.4);
+}
+
+
+/* Inputs */
+
+input, select{
+padding:10px;
+width:260px;
+border-radius:6px;
+border:1px solid #aaa;
+font-size:14px;
+}
+
+
+/* Front Page Buttons Layout */
+
+.buttons{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:20px;
+margin-top:60px;
+}
+
+
+/* Popup Styling */
+
+.popup{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+}
+
+.popup-content{
+background:#1c1c1c;
+color:white;
+padding:30px;
+width:350px;
+margin:120px auto;
+border-radius:15px;
+box-shadow:0 15px 40px rgba(0,0,0,0.5);
+}
+
+.popup-content input{
+background:#2a2a2a;
+color:Light Grey;
+border:1px solid #555;
+}
+
+.popup-content h2{
+color:#e6d5b8;
+}
+
+.close{
+float:right;
+font-size:22px;
+cursor:pointer;
+}
+
+
+
+/* Risk Bar */
+
+#riskColor{
+height:20px;
+border-radius:20px;
+margin-top:10px;
+}
+
+
+/* Dashboard Layout */
+
+.container{
+display:flex;
+}
+
+
+/* Sidebar */
+
+.sidebar{
+width:220px;
+background:#23262B;
+height:100vh;
+padding:20px;
+position:fixed;
+}
+
+.sidebar h2{
+color:#e6d5b8;
+}
+
+.sidebar button{
+display:block;
+width:100%;
+margin:15px 0;
+padding:12px;
+background:#e6d5b8;
+color:black;
+border:none;
+border-radius:6px;
+font-size:15px;
+cursor:pointer;
+}
+
+.sidebar button:hover{
+background:white;
+}
+
+
+/* Main Dashboard Area */
+
+.main{
+margin-left:240px;
+padding:30px;
+}
+
+
+/* Profile Card */
+
+.profile-card{
+background:#23262B;
+padding:20px;
+border-radius:10px;
+width:250px;
+box-shadow:0 4px 10px rgba(0,0,0,0.4);
+margin:auto;
+}
+
+
+/* Financial Summary Card */
+
+.loan-card{
+background: rgba(255,255,255,0.06);
+backdrop-filter: blur(8px);
+border-radius:15px;
+padding:25px;
+margin:30px auto;
+box-shadow:0 10px 25px rgba(0,0,0,0.4);
+width:450px;
+transition:0.3s;
+}
+
+.loan-card:hover{
+transform:translateY(-5px);
+box-shadow:0 20px 40px rgba(0,0,0,0.5);
+}
+
+
+/* Charts Layout */
+
+.charts{
+display:flex;
+justify-content:center;
+gap:40px;
+flex-wrap:wrap;
+margin-top:40px;
+}
+
+.topbar{
+width:100%;
+background:#111;
+padding:15px;
+position:sticky;
+top:0;
+box-shadow:0 4px 10px rgba(0,0,0,0.4);
+}
+
+.topbar h2{
+margin:0;
+color:#e6d5b8;
+text-align:center;
+}

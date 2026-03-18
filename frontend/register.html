@@ -1,65 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>User Registration</title>
-<link rel="stylesheet" href="style.css">
+    <title>Register</title>
 </head>
-
 <body>
 
 <h2>User Registration</h2>
 
-<form onsubmit="registerUser(event)">
+<input type="text" id="name" placeholder="Name"><br><br>
+<input type="text" id="phone" placeholder="Phone"><br><br>
+<input type="text" id="username" placeholder="Username"><br><br>
+<input type="password" id="password" placeholder="Password"><br><br>
+<input type="password" id="confirmPassword" placeholder="Confirm Password"><br><br>
 
-Name:<br>
-<input type="text" id="name"><br><br>
+<button onclick="registerUser()">Register</button>
 
-Phone:<br>
-<input type="text" id="phone"><br><br>
-
-<button type="submit">Register</button>
-
-</form>
-
-<script>
-
-function registerUser(event){
-event.preventDefault();
-
-let name = document.getElementById("name").value;
-let phone = document.getElementById("phone").value;
-
-if(name=="" || phone==""){
-alert("Fill all fields");
-return;
-}
-
-// get existing users
-let users = JSON.parse(localStorage.getItem("users")) || [];
-
-// create new user
-let newUser = {
-id: Date.now(),
-name: name,
-phone: phone,
-income: 0,
-expense: 0,
-score: 0,
-status: "Pending"
-};
-
-users.push(newUser);
-
-// save all users
-localStorage.setItem("users", JSON.stringify(users));
-
-// store current logged user
-localStorage.setItem("currentUser", phone);
-
-window.location.href="dashboard.html";
-}
-
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>

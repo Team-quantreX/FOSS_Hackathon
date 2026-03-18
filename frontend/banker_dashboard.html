@@ -99,10 +99,10 @@ row.innerHTML = `
 <td>₹${u.income || 0}</td>
 <td>₹${u.expense || 0}</td>
 <td style="color:${color}; font-weight:bold;">${u.score || 0}</td>
-<td id="status-${index}">${u.status || "Pending"}</td>
+<td>${u.status || "Pending"}</td>
 <td>
-<button onclick="approve(${index})">Approve</button>
-<button onclick="reject(${index})">Reject</button>
+<button onclick="approve('${u.id}')">Approve</button>
+<button onclick="reject('${u.id}')">Reject</button>
 </td>
 `;
 

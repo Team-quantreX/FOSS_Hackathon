@@ -149,7 +149,7 @@ window.onload = function(){
 let formFilled = localStorage.getItem("financeFilled");
 
 if(!formFilled){
-document.getElementById("financePopup").style.display="block";
+document.getElementById("financePopup").style.display="flex";
 }
 else{
 loadSavedData(); // ✅ LOAD DATA AFTER REFRESH
@@ -278,7 +278,12 @@ createCharts(income, transport, education, food, utilities, other, totalExpense)
 /* CHARTS */
 function createCharts(income, transport, education, food, utilities, other, totalExpense){
 
-new Chart(document.getElementById("expenseChart"),{
+// 🔥 DESTROY OLD CHARTS (important fix)
+if(window.expenseChartObj) window.expenseChartObj.destroy();
+if(window.incomeChartObj) window.incomeChartObj.destroy();
+
+/* PIE CHART */
+window.expenseChartObj = new Chart(document.getElementById("expenseChart"),{
 type:'pie',
 data:{
 labels:["Transport","Education","Food","Utilities","Other"],
@@ -295,7 +300,8 @@ backgroundColor:[
 }
 });
 
-new Chart(document.getElementById("incomeChart"),{
+/* BAR CHART */
+window.incomeChartObj = new Chart(document.getElementById("incomeChart"),{
 type:'bar',
 data:{
 labels:["Income","Expenses"],
@@ -303,17 +309,10 @@ datasets:[{
 data:[income,totalExpense],
 backgroundColor:["#4CAF50","#F44336"]
 }]
-},
-options:{
-plugins:{
-legend:{
-labels:{
-font:{size:14}
-}
-}
-}
 }
 });
+
+}
 
 }
 

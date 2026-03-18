@@ -7,113 +7,79 @@
 </head>
 
 <body>
-<h1>AI-Based Loan Risk Analysis System</h1>
-<div class="loan-card">
-<h2>Loan Eligibility Check</h2>
 
-Monthly Income:<br>
+<h1>Loan Eligibility Check</h1>
+
+<div class="loan-card">
+
+Income:<br>
 <input type="number" id="income"><br><br>
 
-Monthly Expenses:<br>
+Expenses:<br>
 <input type="number" id="expenses"><br><br>
 
-Existing EMI:<br>
-<input type="number" id="existingEmi"><br><br>
-
-Loan Type:<br>
-<select>
-<option>Personal Loan</option>
-<option>Education Loan</option>
-<option>Business Loan</option>
-<option>Micro Loan</option>
-</select><br><br>
-
-Loan Amount Requested:<br>
+Loan Amount:<br>
 <input type="number" id="loan"><br><br>
 
-Loan Tenure (months):<br>
+Tenure:<br>
 <input type="number" id="tenure"><br><br>
 
+<button onclick="checkRisk()">Check</button>
 
-<h3>Alternative Credit Data</h3>
+<h3 id="score"></h3>
+<h3 id="result"></h3>
+<h3 id="emi"></h3>
 
-Upload Rent Payment Proof:<br>
-<input type="file"><br><br>
-
-Upload Electricity Bill:<br>
-<input type="file"><br><br>
-
-Upload Mobile Bill:<br>
-<input type="file"><br><br>
-
-
-<button onclick="checkRisk()">Check Eligibility</button>
-
-
-<h3>Risk Score</h3>
-<p id="score">Your score will appear here</p>
-
-
-<h3>Loan Risk Result</h3>
-<p id="result">Your risk result will appear here.</p>
-<div id="riskColor" style="width:200px;height:20px;margin:auto;"></div>
-
-
-<h3>Loan Recommendation</h3>
-<p id="loanType">Recommended loan will appear here.</p>
-  
-
-<h3>Estimated Monthly EMI</h3>
-<p id="emiResult">EMI will appear here</p>
-
-
+</div>
 
 <script>
 
 function checkRisk(){
 
-let income = document.getElementById("income").value;
-let expenses = document.getElementById("expenses").value;
-let loan = document.getElementById("loan").value;
-let tenure = document.getElementById("tenure").value;
+let income = Number(document.getElementById("income").value);
+let expenses = Number(document.getElementById("expenses").value);
+let loan = Number(document.getElementById("loan").value);
+let tenure = Number(document.getElementById("tenure").value);
 
-let emi = loan / tenure;
+let emi = loan/tenure;
 
-let ratio = expenses / income;
+let ratio = expenses/income;
 
-let score = 0;
-let result = "";
-let loanType = "";
-let color = "";
+let score, result;
 
-if(ratio < 0.4){
-score = 80;
-result = "Low Risk Borrower";
-loanType = "Eligible for Personal Loan or Business Loan";
-color = "green";
+if(ratio<0.4){
+score=80;
+result="Low Risk";
 }
-else if(ratio < 0.7){
-score = 60;
-result = "Medium Risk Borrower";
-loanType = "Eligible for Small Personal Loan";
-color = "yellow";
+else if(ratio<0.7){
+score=60;
+result="Medium Risk";
 }
 else{
-score = 35;
-result = "High Risk Borrower";
-loanType = "Only Micro Loan Recommended";
-color = "red";
+score=35;
+result="High Risk";
 }
 
-document.getElementById("riskColor").style.backgroundColor = color;
-document.getElementById("score").innerText = "Risk Score: " + score;
+// show
+document.getElementById("score").innerText = "Score: "+score;
 document.getElementById("result").innerText = result;
-document.getElementById("loanType").innerText = loanType;
-document.getElementById("emiResult").innerText = "Estimated EMI: ₹" + emi;
+document.getElementById("emi").innerText = "EMI: ₹"+emi;
+
+
+// SAVE TO USER
+let currentPhone = localStorage.getItem("currentUser");
+let users = JSON.parse(localStorage.getItem("users")) || [];
+
+let user = users.find(u => u.phone === currentPhone);
+
+if(user){
+user.score = score;
+localStorage.setItem("users", JSON.stringify(users));
+}
 
 }
 
 </script>
-</div>
+
 </body>
 </html>

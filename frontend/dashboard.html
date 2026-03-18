@@ -1,221 +1,28 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-<title>User Dashboard</title>
-<link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
 
-<div class="topbar">
-<h2>FinRisk - Borrower Analytics</h2>
+<h2>User Dashboard</h2>
+
+<div>
+    <h3>Risk Score: <span id="riskScore">0</span></h3>
+    <h3>Risk Level: <span id="riskLevel">New</span></h3>
 </div>
 
-<div class="container">
+<button onclick="goToLoan()">Check Loan Eligibility</button>
 
-<div class="sidebar">
-<h2>FinRisk</h2>
-<button onclick="location.href='dashboard.html'">Dashboard</button>
-<button onclick="location.href='loan_check.html'">Loan Eligibility</button>
-<button onclick="logout()">Logout</button>
-</div>
+<h3>Income vs Expense</h3>
+<canvas id="barChart"></canvas>
 
-<div class="main">
+<h3>Expense Distribution</h3>
+<canvas id="pieChart"></canvas>
 
-<h1>User Financial Dashboard</h1>
-
-<div class="profile-card">
-<h3>User Profile</h3>
-<p>Name : <span id="userName"></span></p>
-<p>Status : Active</p>
-</div>
-
-<div class="loan-card">
-<h2>Risk Analysis</h2>
-<p>Risk Score : <span id="riskScore">-</span></p>
-<p>Risk Level : <span id="riskLevel">-</span></p>
-
-<h2>Financial Summary</h2>
-<p>Income: <span id="incomeDisplay">-</span></p>
-<p>Expenses: <span id="expenseDisplay">-</span></p>
-
-<button onclick="openFinancePopup()">Change Expense Distribution</button>
-</div>
-
-<div class="loan-card">
-<h3>AI Suggestions</h3>
-<p id="advice">-</p>
-</div>
-
-<div class="charts">
-<canvas id="expenseChart"></canvas>
-<canvas id="incomeChart"></canvas>
-</div>
-
-</div>
-</div>
-
-<!-- POPUP -->
-<div id="financePopup" class="popup">
-<div class="popup-content">
-
-<h2>Enter Financial Details</h2>
-
-Income<br>
-<input type="number" id="income"><br><br>
-
-Transport<br>
-<input type="number" id="transport"><br><br>
-
-Education<br>
-<input type="number" id="education"><br><br>
-
-Food<br>
-<input type="number" id="food"><br><br>
-
-Utilities<br>
-<input type="number" id="utilities"><br><br>
-
-Other<br>
-<input type="number" id="other"><br><br>
-
-<button onclick="saveFinance()">Save</button>
-
-</div>
-</div>
-
-<script>
-
-// ✅ GET CURRENT USER
-let currentPhone = localStorage.getItem("currentUser");
-
-// ✅ GET ALL USERS
-let users = JSON.parse(localStorage.getItem("users")) || [];
-
-// ✅ FIND CURRENT USER
-let user = users.find(u => u.phone === currentPhone);
-
-// ✅ SHOW NAME
-if(user){
-document.getElementById("userName").innerText = user.name;
-}
-
-// ✅ ON LOAD
-window.onload = function(){
-
-if(user && user.income === 0){
-document.getElementById("financePopup").style.display="block";
-}
-
-loadData();
-}
-
-// OPEN POPUP
-function openFinancePopup(){
-document.getElementById("financePopup").style.display="block";
-}
-
-// SAVE DATA
-function saveFinance(){
-
-let income = Number(document.getElementById("income").value);
-let transport = Number(document.getElementById("transport").value);
-let education = Number(document.getElementById("education").value);
-let food = Number(document.getElementById("food").value);
-let utilities = Number(document.getElementById("utilities").value);
-let other = Number(document.getElementById("other").value);
-
-let totalExpense = transport + education + food + utilities + other;
-
-let ratio = (income - totalExpense)/income;
-
-let score;
-
-if(ratio > 0.4) score = 85;
-else if(ratio > 0.25) score = 70;
-else if(ratio > 0.1) score = 55;
-else score = 35;
-
-// ✅ SAVE INTO USER OBJECT
-user.income = income;
-user.expense = totalExpense;
-user.score = score;
-
-// ✅ SAVE USERS ARRAY
-localStorage.setItem("users", JSON.stringify(users));
-
-// CLOSE POPUP
-document.getElementById("financePopup").style.display="none";
-
-loadData();
-}
-
-// LOAD DATA
-function loadData(){
-
-if(!user) return;
-
-document.getElementById("incomeDisplay").innerText = "₹"+user.income;
-document.getElementById("expenseDisplay").innerText = "₹"+user.expense;
-document.getElementById("riskScore").innerText = user.score;
-
-// LEVEL
-let level;
-
-if(user.score >= 75) level = "Low Risk";
-else if(user.score >= 55) level = "Medium Risk";
-else level = "High Risk";
-
-document.getElementById("riskLevel").innerText = level;
-
-// AI suggestion
-if(user.score < 60){
-document.getElementById("advice").innerText =
-"Reduce expenses to improve score";
-}
-else{
-document.getElementById("advice").innerText =
-"You are financially stable";
-}
-
-// charts
-createCharts(user.income, user.expense);
-}
-
-// CHARTS
-function createCharts(income, expense){
-
-new Chart(document.getElementById("expenseChart"),{
-type:'pie',
-data:{
-labels:["Expenses"],
-datasets:[{
-data:[expense]
-}]
-}
-});
-
-new Chart(document.getElementById("incomeChart"),{
-type:'bar',
-data:{
-labels:["Income","Expenses"],
-datasets:[{
-data:[income,expense],
-backgroundColor:["#4CAF50","#FF5252"]
-}]
-}
-});
-}
-
-// LOGOUT
-function logout(){
-localStorage.removeItem("currentUser");
-window.location.href = "index.html";
-}
-
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>

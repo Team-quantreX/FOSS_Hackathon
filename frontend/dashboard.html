@@ -2,139 +2,71 @@
 <html>
 
 <head>
-
 <title>User Dashboard</title>
-
 <link rel="stylesheet" href="style.css">
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 </head>
 
-
 <body>
-
-<!-- TOP BAR -->
 
 <div class="topbar">
 <h2>FinRisk - Borrower Analytics</h2>
 </div>
 
-
 <div class="container">
 
-
-<!-- SIDEBAR -->
-
 <div class="sidebar">
-
 <h2>FinRisk</h2>
-
 <button onclick="location.href='dashboard.html'">Dashboard</button>
-
 <button onclick="location.href='loan_check.html'">Loan Eligibility</button>
-
-<button onclick="location.href='financial_advisory.html'">Financial Advisory</button>
-
-<button>Profile</button>
-
 <button>Logout</button>
-
 </div>
-
-
-
-<!-- MAIN CONTENT -->
 
 <div class="main">
 
 <h1>User Financial Dashboard</h1>
 
-
-<!-- PROFILE -->
-
 <div class="profile-card">
-
 <h3>User Profile</h3>
-
 <p>Name : <span id="userName"></span></p>
-
-<p>Account Type : Borrower</p>
-
 <p>Status : Active</p>
-
 </div>
 
-
-<br>
-
-
-<!-- FINANCIAL SUMMARY -->
-
 <div class="loan-card">
-
 <h2>Risk Analysis</h2>
-
 <p>Risk Score : <span id="riskScore">-</span></p>
-
 <p>Risk Level : <span id="riskLevel">-</span></p>
 
 <h2>Financial Summary</h2>
+<p>Income: <span id="incomeDisplay">-</span></p>
+<p>Expenses: <span id="expenseDisplay">-</span></p>
 
-<table border="1">
-
-<tr>
-<th>Monthly Income</th>
-<td id="incomeDisplay">-</td>
-</tr>
-
-<tr>
-<th>Total Expenses</th>
-<td id="expenseDisplay">-</td>
-</tr>
-
-</table>
-
+<button onclick="openFinancePopup()">Change Expense Distribution</button>
 </div>
 
-
-
-<!-- CHARTS -->
+<div class="loan-card">
+<h3>AI Suggestions</h3>
+<p id="advice">-</p>
+</div>
 
 <div class="charts">
-
-<div style="width:500px;">
-<h3>Expense Distribution</h3>
 <canvas id="expenseChart"></canvas>
-</div>
-
-<div style="width:500px;">
-<h3>Income vs Expenses</h3>
 <canvas id="incomeChart"></canvas>
 </div>
 
 </div>
-
 </div>
 
-</div>
-
-
-
-<!-- POPUP FORM -->
-
+<!-- POPUP -->
 <div id="financePopup" class="popup">
-
 <div class="popup-content">
 
 <h2>Enter Financial Details</h2>
 
-Monthly Income<br>
+Income<br>
 <input type="number" id="income"><br><br>
 
-<h3>Expense Categories</h3>
-
-Transportation<br>
+Transport<br>
 <input type="number" id="transport"><br><br>
 
 Education<br>
@@ -149,126 +81,148 @@ Utilities<br>
 Other<br>
 <input type="number" id="other"><br><br>
 
+<div id="extraExpenses"></div>
+
+<button onclick="addExpense()">Add Other Expense</button><br><br>
+
 <button onclick="saveFinance()">Save</button>
 
 </div>
-
 </div>
-
-
 
 <script>
 
-
-/* Show user name */
-
+// username
 document.getElementById("userName").innerText =
 localStorage.getItem("userName");
 
-
-
-/* Show popup only first time */
-
+// show popup only once
 window.onload = function(){
+if(localStorage.getItem("financeFilled") !== "yes"){
+document.getElementById("financePopup").style.display="block";
+}
+loadData();
+}
 
-let formFilled = localStorage.getItem("financeFilled");
-
-if(!formFilled){
+// open popup
+function openFinancePopup(){
 document.getElementById("financePopup").style.display="block";
 }
 
+// add extra expense
+function addExpense(){
+let div = document.createElement("div");
+div.innerHTML = `
+Extra Expense<br>
+<input type="number" class="extra"><br><br>
+`;
+document.getElementById("extraExpenses").appendChild(div);
 }
 
-
-
+// save data
 function saveFinance(){
 
 let income = Number(document.getElementById("income").value);
-
 let transport = Number(document.getElementById("transport").value);
-
 let education = Number(document.getElementById("education").value);
-
 let food = Number(document.getElementById("food").value);
-
 let utilities = Number(document.getElementById("utilities").value);
-
 let other = Number(document.getElementById("other").value);
 
-let totalExpense = transport + education + food + utilities + other;
+// extra expenses
+let extra = document.getElementsByClassName("extra");
+let extraTotal = 0;
+
+for(let i=0;i<extra.length;i++){
+extraTotal += Number(extra[i].value);
+}
+
+let totalExpense = transport + education + food + utilities + other + extraTotal;
 
 let savings = income - totalExpense;
+let ratio = savings / income;
 
-let riskScore = 0;
+let score;
 
-/* Savings ratio calculation */
+if(ratio > 0.4) score = 85;
+else if(ratio > 0.25) score = 70;
+else if(ratio > 0.1) score = 55;
+else score = 35;
 
-let savingsRatio = savings / income;
+// save
+localStorage.setItem("income", income);
+localStorage.setItem("expense", totalExpense);
+localStorage.setItem("score", score);
+localStorage.setItem("financeFilled", "yes");
 
-/* scoring */
+// close popup
+document.getElementById("financePopup").style.display="none";
 
-if(savingsRatio > 0.40){
-riskScore = 85;
+loadData();
 }
-else if(savingsRatio > 0.25){
-riskScore = 70;
-}
-else if(savingsRatio > 0.10){
-riskScore = 55;
+
+// load data
+function loadData(){
+
+let income = localStorage.getItem("income");
+let expense = localStorage.getItem("expense");
+let score = localStorage.getItem("score");
+
+if(!income) return;
+
+document.getElementById("incomeDisplay").innerText = "₹"+income;
+document.getElementById("expenseDisplay").innerText = "₹"+expense;
+document.getElementById("riskScore").innerText = score;
+
+// level
+let level;
+
+if(score >= 75) level = "Low Risk";
+else if(score >= 55) level = "Medium Risk";
+else level = "High Risk";
+
+document.getElementById("riskLevel").innerText = level;
+
+// AI suggestion
+if(score < 60){
+document.getElementById("advice").innerText =
+"Reduce expenses to improve score";
 }
 else{
-riskScore = 35;
+document.getElementById("advice").innerText =
+"You are financially stable";
 }
 
-document.getElementById("incomeDisplay").innerText = "₹" + income;
-
-document.getElementById("expenseDisplay").innerText = "₹" + totalExpense;
-
-/* Save popup flag */
-
-localStorage.setItem("financeFilled","yes");
-
-document.getElementById("financePopup").style.display = "none";
-
-createCharts(income, transport, education, food, utilities, other, totalExpense);
-
+// charts
+createCharts(income, expense);
 }
 
-
-
-function createCharts(income, transport, education, food, utilities, other, totalExpense){
+// charts
+function createCharts(income, expense){
 
 new Chart(document.getElementById("expenseChart"),{
-
 type:'pie',
-
 data:{
-labels:["Transport","Education","Food","Utilities","Other"],
+labels:["Expenses"],
 datasets:[{
-data:[transport,education,food,utilities,other]
+data:[expense]
 }]
 }
-
 });
 
-
 new Chart(document.getElementById("incomeChart"),{
-
 type:'bar',
-
 data:{
 labels:["Income","Expenses"],
 datasets:[{
-data:[income,totalExpense]
+data:[income,expense],
+backgroundColor:["#4CAF50","#FF5252"]
 }]
 }
-
 });
-
 }
 
 </script>
 
 </body>
-
 </html>

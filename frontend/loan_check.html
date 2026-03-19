@@ -48,10 +48,17 @@ Upload Rent Payment Proof:<br>
 Upload Electricity Bill:<br>
 <input type="file"><br><br>
 
-Upload Mobile Bill:<br>
+Upload Mobile Recharge Bill:<br>
+<input type="file"><br><br>
+
+Upload Water Bill:<br>
 <input type="file"><br><br>
 
 <button onclick="checkRisk()">Check Eligibility</button>
+<br><br>
+Phone Number<br>
+<input type="text" id="phone"><br><br>
+<button onclick="applyLoan()">Apply for Loan</button>
 
 <h3>Risk Score</h3>
 <p id="score">Your score will appear here</p>
@@ -107,6 +114,20 @@ else{
     color = "red";
 }
 
+/* APPLY */
+function applyLoan(){
+
+let phone = document.getElementById("phone").value;
+
+if(!phone){
+alert("Enter phone number!");
+return;
+}
+
+window.location.href = "loan_check.html";
+
+}
+
 // UI UPDATE (UNCHANGED STYLE)
 document.getElementById("riskColor").style.backgroundColor = color;
 document.getElementById("score").innerText = "Risk Score: " + score;
@@ -130,8 +151,6 @@ let application = {
 let applications = JSON.parse(localStorage.getItem("applications")) || [];
 applications.push(application);
 localStorage.setItem("applications", JSON.stringify(applications));
-
-alert("Application sent to banker!");
 
 }
 

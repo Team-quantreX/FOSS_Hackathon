@@ -158,7 +158,7 @@ function loadCharts() {
                 labels: ["Income", "Expense"],
                 datasets: [{
                     data: [income, expense],
-                    backgroundColor: ["#4CAF50", "#F44336"]
+                    backgroundColor: ["#8ad18d5d", "#f4433634"]
                 }]
             }
         });

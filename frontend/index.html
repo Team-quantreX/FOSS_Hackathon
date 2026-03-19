@@ -7,62 +7,23 @@
 <link rel="stylesheet" href="style.css">
 
 <style>
+
+/* ONLY KEEP MINIMAL PAGE ALIGNMENT */
 body{
-font-family:Georgia, serif;
-text-align:center;
-margin-top:80px;
+    font-family: Georgia, serif;
+    text-align:center;
+    margin-top:80px;
 }
 
-.buttons button{
-padding:15px 30px;
-font-size:18px;
-margin:10px;
-cursor:pointer;
-}
-
-.popup{
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.6);
-justify-content:center;
-align-items:center;
-}
-
-.popup.show{
-display:flex;
-}
-
-.popup-content{
-background:rgb(73, 58, 58);
-padding:30px;
-border-radius:12px;
-width:320px;
-text-align:center;
-box-shadow:0 10px 25px rgba(0,0,0,0.3);
-}
-
-input{
-width:90%;
-padding:10px;
-margin:6px;
-font-size:16px;
-}
-
-button{
-padding:10px 20px;
-font-size:16px;
-cursor:pointer;
-}
+/* REMOVE OLD POPUP + INPUT STYLES (they were breaking your theme) */
 
 .close{
-float:right;
-font-size:20px;
-cursor:pointer;
+    float:right;
+    font-size:22px;
+    cursor:pointer;
+    color:#e6d5b8;
 }
+
 </style>
 
 </head>
@@ -291,10 +252,7 @@ let data = JSON.parse(stored);
 
 if(data.pass === password){
 
-// ✅ STORE SESSION
 localStorage.setItem("currentUser", username);
-
-// ✅ REDIRECT
 window.location.href="user_dashboard.html";
 
 }else{

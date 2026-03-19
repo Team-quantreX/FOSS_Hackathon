@@ -2,6 +2,7 @@
 <html>
 
 <head>
+
 <title>User Dashboard</title>
 
 <link rel="stylesheet" href="style.css">
@@ -55,7 +56,6 @@
 <button onclick="location.href='financial_advisory.html'">Financial Advisory</button>
 <button>Profile</button>
 <button onclick="logout()">Logout</button>
-
 </div>
 
 <div class="main">
@@ -102,7 +102,16 @@ Risk Level :
 </table>
 
 <br>
+
 <button onclick="openPopup()">Re-enter Expenses</button>
+
+<!-- ✅ ADDED -->
+<br><br>
+Phone Number<br>
+<input type="text" id="phone"><br><br>
+
+
+<div id="statusBox" style="margin-top:20px; font-size:22px; font-weight:bold;"></div>
 
 </div>
 
@@ -161,8 +170,10 @@ Other<br>
 
 <script>
 
-/* ✅ MAIN LOAD (FIXED - NO DUPLICATES) */
+/* LOAD */
 window.addEventListener("DOMContentLoaded", function(){
+
+Notification.requestPermission();
 
 let currentUser = localStorage.getItem("currentUser");
 
@@ -174,24 +185,11 @@ return;
 
 let userData = JSON.parse(localStorage.getItem("user_" + currentUser));
 
-if(!userData){
-alert("User data missing!");
-window.location.href="index.html";
-return;
-}
-
-/* DISPLAY USER */
 document.getElementById("welcome").innerText = "Welcome, " + userData.name;
 document.getElementById("userName").innerText = userData.name;
 
-/* LOAD DATA OR POPUP */
-let formFilled = localStorage.getItem("financeFilled");
-
-if(formFilled === "yes"){
+/* LOAD SAVED DATA */
 loadSavedData();
-}else{
-document.getElementById("financePopup").classList.add("show");
-}
 
 });
 
@@ -203,14 +201,17 @@ window.location.href="index.html";
 }
 
 
-/* OPEN POPUP */
+/* POPUP */
 function openPopup(){
 document.getElementById("financePopup").classList.add("show");
 }
 
 
-/* SAVE FINANCE */
+/* SAVE */
 function saveFinance(){
+
+let currentUser = localStorage.getItem("currentUser");
+let userData = JSON.parse(localStorage.getItem("user_" + currentUser));
 
 let income = Number(document.getElementById("income").value);
 let totalExpense = Number(document.getElementById("totalExpense").value);
@@ -225,6 +226,11 @@ let sum = transport + education + food + utilities + other;
 
 if(sum !== totalExpense){
 document.getElementById("errorMsg").innerText = "⚠ Must match total expenses!";
+return;
+}
+
+if(!income || !totalExpense){
+document.getElementById("errorMsg").innerText = "Enter valid values!";
 return;
 }
 
@@ -243,6 +249,7 @@ else{
 riskScore = 40; riskLevel="High Risk"; color="red";
 }
 
+
 /* DISPLAY */
 document.getElementById("incomeDisplay").innerText = "₹"+income;
 document.getElementById("expenseDisplay").innerText = "₹"+totalExpense;
@@ -252,7 +259,8 @@ let levelEl = document.getElementById("riskLevel");
 levelEl.innerText = riskLevel;
 levelEl.style.color = color;
 
-/* SAVE */
+
+/* SAVE LOCAL */
 localStorage.setItem("financeFilled","yes");
 localStorage.setItem("income", income);
 localStorage.setItem("totalExpense", totalExpense);
@@ -264,11 +272,33 @@ localStorage.setItem("other", other);
 localStorage.setItem("riskScore", riskScore);
 localStorage.setItem("riskLevel", riskLevel);
 
+
+/* 🔥 FIXED BACKEND CALL (MOVED HERE) */
+fetch("http://127.0.0.1:5000/save",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body: JSON.stringify({
+name:userData.name,
+phone:document.getElementById("phone").value,
+income:income,
+expense:totalExpense,
+risk_score:riskScore
+})
+})
+.then(()=>{
+
+alert("Saved & Ready for Loan");
+
+});
+
+
 /* CLOSE */
 document.getElementById("financePopup").classList.remove("show");
 
+
 /* CHARTS */
 createCharts(income, transport, education, food, utilities, other, totalExpense);
+
 }
 
 
@@ -299,6 +329,7 @@ else if(riskLevel==="Medium Risk") levelEl.style.color="orange";
 else levelEl.style.color="red";
 
 createCharts(income, transport, education, food, utilities, other, totalExpense);
+
 }
 
 
@@ -329,6 +360,71 @@ data:[income,totalExpense]
 });
 
 }
+
+
+
+/* STATUS */
+function checkStatus(phone){
+
+fetch(`http://127.0.0.1:5000/get_status/${phone}`)
+.then(res=>res.json())
+.then(data=>{
+
+let msg="";
+
+if(data.status==="Approved"){
+msg="✅ Loan Approved!";
+}
+else if(data.status==="Rejected"){
+msg="❌ Rejected: "+data.reason;
+}
+else if(data.status==="Manual Review"){
+msg="⚠ Under Manual Review";
+}
+else{
+msg="⏳ Pending";
+}
+
+document.getElementById("statusBox").innerText = msg;
+
+if(window.lastStatus === undefined){
+window.lastStatus = data.status;
+}
+else if(window.lastStatus !== data.status){
+showNotification(msg);
+window.lastStatus = data.status;
+}
+
+});
+
+}
+
+
+function showNotification(message){
+
+if(!("Notification" in window)){
+return;
+}
+
+if(Notification.permission === "granted"){
+new Notification(message);
+}
+else if(Notification.permission !== "denied"){
+Notification.requestPermission().then(permission=>{
+if(permission === "granted"){
+new Notification(message);
+}
+});
+}
+
+}
+
+
+/* AUTO UPDATE */
+setInterval(()=>{
+let phone = document.getElementById("phone").value;
+if(phone) checkStatus(phone);
+},5000);
 
 </script>
 

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html>
 
 <head>
@@ -14,24 +15,28 @@ margin:20px;
 text-align:center;
 }
 
+/* 🔥 BIGGER CONTROL BUTTONS */
 .controls button{
-margin:5px;
+margin:8px;
+font-size:22px;
+padding:10px 18px;
 }
 
-/* 🔥 BIGGER TABLE (ONLY ADDED) */
+/* 🔥 BIGGER TABLE */
 #userTable {
-font-size:18px;
+font-size:22px;
 border-collapse: collapse;
 }
 
 #userTable th, #userTable td {
-padding:12px;
+padding:16px;
 text-align:center;
 }
 
 #userTable th {
 background:#333;
 color:white;
+font-size:24px;
 }
 
 /* Popup */
@@ -47,11 +52,28 @@ background:rgba(0,0,0,0.5);
 
 .popup-content{
 background:rgb(70, 58, 58);
-padding:20px;
-width:300px;
+padding:25px;
+width:320px;
 margin:100px auto;
 border-radius:10px;
 text-align:center;
+font-size:22px;
+}
+
+/* 🔥 POPUP TEXT */
+.popup-content h3{
+font-size:26px;
+}
+
+.popup-content input{
+font-size:22px;
+padding:10px;
+width:90%;
+}
+
+.popup-content button{
+font-size:20px;
+margin:5px;
 }
 
 </style>
@@ -117,8 +139,9 @@ let table = document.getElementById("userTable");
 let selectedId = null;
 let applications = [];
 
-/* 🔥 FETCH FROM BACKEND */
+/* FETCH FROM BACKEND */
 function fetchUsers(){
+
 fetch("http://127.0.0.1:5000/users")
 .then(res => res.json())
 .then(data => {
@@ -126,17 +149,18 @@ fetch("http://127.0.0.1:5000/users")
 applications = data.map(u => ({
 id: u[0],
 name: u[1],
-age: "-", /* not in DB */
-loan: 0, /* not in DB */
+age: "-",
+loan: 0,
 existingEmi: u[3] * 0.2,
-score: u[4],
-status: u[5],
-reason: u[6]
+score: u[5],
+status: u[6],
+reason: u[7]
 }));
 
 loadTable(applications);
 
 });
+
 }
 
 /* LOAD TABLE */
@@ -169,18 +193,20 @@ row.innerHTML = `
 <td>${u.age}</td>
 <td>₹${u.loan}</td>
 <td>₹${u.existingEmi}</td>
-<td style="color:${color}; font-weight:bold;">${u.score}</td>
-<td>${u.status}</td>
+<td style="color:${color}; font-weight:bold; font-size:24px;">${u.score}</td>
+<td style="font-size:22px;">${u.status}</td>
 <td>
 <button onclick="approve(${u.id})">Approve</button>
 <button onclick="openReject(${u.id})">Reject</button>
+<button onclick="manualReview(${u.id})">Manual Review</button>
 </td>
 `;
 
 });
+
 }
 
-/* ✅ APPROVE (BACKEND) */
+/* APPROVE */
 function approve(id){
 
 fetch("http://127.0.0.1:5000/update_status",{
@@ -222,6 +248,22 @@ fetchUsers();
 });
 
 }
+
+function manualReview(id){
+
+fetch("http://127.0.0.1:5000/update_status",{
+method:"POST",
+headers:{ "Content-Type":"application/json"},
+body:JSON.stringify({
+id:id,
+status:"Manual Review",
+reason:"Under verification"
+})
+})
+.then(()=>fetchUsers());
+
+}
+
 
 /* FILTER */
 function filterLowRisk(){

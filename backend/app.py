@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request, redirect, jsonify
+from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 import sqlite3
 
 app = Flask(__name__)
+CORS(app)
 
-# Create DB
+# ------------------ DB INIT ------------------
 def init_db():
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
@@ -12,6 +14,7 @@ def init_db():
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
+        phone TEXT,
         income INTEGER,
         expense INTEGER,
         risk_score INTEGER,
@@ -25,14 +28,13 @@ def init_db():
 
 init_db()
 
-
-# HOME
+# ------------------ HOME ------------------
 @app.route('/')
 def home():
     return render_template('dashboard.html')
 
 
-# SAVE USER DATA
+# ------------------ SAVE USER FINANCE ------------------
 @app.route('/save', methods=['POST'])
 def save_data():
     data = request.json
@@ -41,14 +43,16 @@ def save_data():
     c = conn.cursor()
 
     c.execute('''
-    INSERT INTO users (name, income, expense, risk_score, loan_status)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO users (name, phone, income, expense, risk_score, loan_status, reason)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
     ''', (
         data['name'],
+        data['phone'],
         data['income'],
         data['expense'],
         data['risk_score'],
-        "Pending"
+        "Pending",
+        ""
     ))
 
     conn.commit()
@@ -57,7 +61,7 @@ def save_data():
     return jsonify({"message": "Saved"})
 
 
-# BANKER VIEW
+# ------------------ GET USERS (BANKER) ------------------
 @app.route('/users')
 def get_users():
     conn = sqlite3.connect('users.db')
@@ -71,7 +75,7 @@ def get_users():
     return jsonify(users)
 
 
-# APPROVE / REJECT
+# ------------------ UPDATE STATUS ------------------
 @app.route('/update_status', methods=['POST'])
 def update_status():
     data = request.json
@@ -93,6 +97,34 @@ def update_status():
     conn.close()
 
     return jsonify({"message": "Updated"})
+
+
+# ------------------ USER NOTIFICATION ------------------
+@app.route('/get_status/<phone>')
+def get_status(phone):
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
+
+    c.execute('''
+    SELECT loan_status, reason FROM users
+    WHERE phone=?
+    ORDER BY id DESC LIMIT 1
+    ''', (phone,))
+
+    data = c.fetchone()
+
+    conn.close()
+
+    if data:
+        return jsonify({
+            "status": data[0],
+            "reason": data[1]
+        })
+    else:
+        return jsonify({
+            "status": "No Application",
+            "reason": ""
+        })
 
 
 if __name__ == '__main__':

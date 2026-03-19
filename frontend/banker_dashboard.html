@@ -4,9 +4,11 @@
 <head>
 
 <title>Banker Dashboard</title>
+
 <link rel="stylesheet" href="style.css">
 
 <style>
+
 .controls{
 margin:20px;
 text-align:center;
@@ -14,6 +16,22 @@ text-align:center;
 
 .controls button{
 margin:5px;
+}
+
+/* 🔥 BIGGER TABLE (ONLY ADDED) */
+#userTable {
+font-size:18px;
+border-collapse: collapse;
+}
+
+#userTable th, #userTable td {
+padding:12px;
+text-align:center;
+}
+
+#userTable th {
+background:#333;
+color:white;
 }
 
 /* Popup */
@@ -28,13 +46,14 @@ background:rgba(0,0,0,0.5);
 }
 
 .popup-content{
-background:white;
+background:rgb(70, 58, 58);
 padding:20px;
 width:300px;
 margin:100px auto;
 border-radius:10px;
 text-align:center;
 }
+
 </style>
 
 </head>
@@ -82,7 +101,7 @@ text-align:center;
 </div>
 </div>
 
-<!-- 🔴 REJECT REASON POPUP -->
+<!-- 🔴 REJECT POPUP -->
 <div id="rejectPopup" class="popup">
 <div class="popup-content">
 <h3>Reason for Rejection</h3>
@@ -94,28 +113,33 @@ text-align:center;
 
 <script>
 
-// 📥 GET APPLICATIONS FROM USER FORM
-let applications = JSON.parse(localStorage.getItem("applications")) || [];
-
-// 🔥 ADD DEFAULT VALUES (name + id)
-applications = applications.map((app, index) => ({
-id: app.id || index,
-name: app.name || "User " + (index+1),
-age: app.age,
-loan: app.loan,
-existingEmi: app.existingEmi || 0,
-score: app.score,
-status: app.status || "Pending",
-reason: app.reason || ""
-}));
-
-localStorage.setItem("applications", JSON.stringify(applications));
-
 let table = document.getElementById("userTable");
 let selectedId = null;
+let applications = [];
 
+/* 🔥 FETCH FROM BACKEND */
+function fetchUsers(){
+fetch("http://127.0.0.1:5000/users")
+.then(res => res.json())
+.then(data => {
 
-// 🎯 LOAD TABLE
+applications = data.map(u => ({
+id: u[0],
+name: u[1],
+age: "-", /* not in DB */
+loan: 0, /* not in DB */
+existingEmi: u[3] * 0.2,
+score: u[4],
+status: u[5],
+reason: u[6]
+}));
+
+loadTable(applications);
+
+});
+}
+
+/* LOAD TABLE */
 function loadTable(data){
 
 table.innerHTML = `
@@ -142,8 +166,8 @@ let row = table.insertRow();
 
 row.innerHTML = `
 <td>${u.name}</td>
-<td>${u.age || "-"}</td>
-<td>₹${u.loan || 0}</td>
+<td>${u.age}</td>
+<td>₹${u.loan}</td>
 <td>₹${u.existingEmi}</td>
 <td style="color:${color}; font-weight:bold;">${u.score}</td>
 <td>${u.status}</td>
@@ -154,94 +178,82 @@ row.innerHTML = `
 `;
 
 });
-
 }
 
-// INITIAL LOAD
-loadTable(applications);
-
-
-// ✅ APPROVE
+/* ✅ APPROVE (BACKEND) */
 function approve(id){
 
-let apps = JSON.parse(localStorage.getItem("applications")) || [];
+fetch("http://127.0.0.1:5000/update_status",{
+method:"POST",
+headers:{ "Content-Type":"application/json"},
+body:JSON.stringify({
+id:id,
+status:"Approved",
+reason:""
+})
+})
+.then(()=>fetchUsers());
 
-let user = apps.find(u => u.id == id);
-
-if(user){
-user.status = "Approved";
-user.reason = "";
 }
 
-localStorage.setItem("applications", JSON.stringify(apps));
-loadTable(apps);
-
-}
-
-
-// 🔴 OPEN REJECT POPUP
+/* REJECT */
 function openReject(id){
 selectedId = id;
 document.getElementById("rejectReason").value = "";
 document.getElementById("rejectPopup").style.display = "block";
 }
 
-
-// 🔴 SUBMIT REJECT
 function submitReject(){
 
 let reason = document.getElementById("rejectReason").value;
 
-let apps = JSON.parse(localStorage.getItem("applications")) || [];
-
-let user = apps.find(u => u.id == selectedId);
-
-if(user){
-user.status = "Rejected";
-user.reason = reason;
-}
-
-localStorage.setItem("applications", JSON.stringify(apps));
-
+fetch("http://127.0.0.1:5000/update_status",{
+method:"POST",
+headers:{ "Content-Type":"application/json"},
+body:JSON.stringify({
+id:selectedId,
+status:"Rejected",
+reason:reason
+})
+})
+.then(()=>{
 closePopup();
-loadTable(apps);
+fetchUsers();
+});
 
 }
 
-
-// FILTER LOW RISK
+/* FILTER */
 function filterLowRisk(){
 let filtered = applications.filter(u => u.score >= 75);
 loadTable(filtered);
 }
 
-// SHOW ALL
+/* SHOW ALL */
 function showAll(){
-applications = JSON.parse(localStorage.getItem("applications")) || [];
-loadTable(applications);
+fetchUsers();
 }
 
-// SORT
+/* SORT */
 function sortByScore(){
-let sorted = [...applications].sort((a,b) => b.score - a.score);
+let sorted = [...applications].sort((a,b)=>b.score-a.score);
 loadTable(sorted);
 }
 
-
-// CLOSE POPUP
+/* CLOSE POPUP */
 function closePopup(){
 document.getElementById("rejectPopup").style.display = "none";
 }
 
-
-
-// LOGOUT
+/* LOGOUT */
 function logout(){
 window.location.href = "index.html";
 }
 
+/* INITIAL LOAD */
+fetchUsers();
+
 </script>
 
 </body>
-
 </html>

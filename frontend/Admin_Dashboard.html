@@ -1,8 +1,40 @@
 <!DOCTYPE html>
+
 <html>
+
 <head>
+
 <title>Admin Dashboard</title>
+
 <link rel="stylesheet" href="style.css">
+
+<style>
+
+/* 🔥 BIGGER TABLE */
+#adminTable{
+font-size:22px;
+border-collapse:collapse;
+}
+
+#adminTable th, #adminTable td{
+padding:16px;
+text-align:center;
+}
+
+#adminTable th{
+font-size:24px;
+background:#333;
+color:white;
+}
+
+/* Buttons */
+button{
+font-size:20px;
+padding:10px 16px;
+}
+
+</style>
+
 </head>
 
 <body>
@@ -59,7 +91,7 @@ let row = table.insertRow();
 row.innerHTML = `
 <td>${u.name}</td>
 <td>${u.phone}</td>
-<td>${u.score}</td>
+<td style="font-size:24px; font-weight:bold;">${u.score}</td>
 <td>
 <button onclick="deleteUser('${u.id}')">Delete</button>
 </td>
@@ -71,7 +103,7 @@ row.innerHTML = `
 
 loadUsers();
 
-// DELETE USER
+/* DELETE USER */
 function deleteUser(id){
 
 users = users.filter(u => u.id != id);
@@ -81,7 +113,7 @@ localStorage.setItem("users", JSON.stringify(users));
 loadUsers();
 }
 
-// RESET SYSTEM
+/* RESET SYSTEM */
 function clearAll(){
 
 if(confirm("Are you sure?")){
@@ -94,4 +126,5 @@ location.reload();
 </script>
 
 </body>
+
 </html>

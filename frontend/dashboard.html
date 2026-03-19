@@ -2,7 +2,6 @@
 <html>
 
 <head>
-
 <title>User Dashboard</title>
 
 <link rel="stylesheet" href="style.css">
@@ -33,10 +32,7 @@
     width: 350px;
     max-height: 90vh;
     overflow-y: auto;
-}
-
-.popup-content h3 {
-    font-size: 20px;
+    color: rgb(34, 20, 20);
 }
 </style>
 
@@ -46,6 +42,7 @@
 
 <div class="topbar">
 <h2>FinRisk - Borrower Analytics</h2>
+<h2 id="welcome"></h2>
 </div>
 
 <div class="container">
@@ -53,11 +50,11 @@
 <div class="sidebar">
 <h2>FinRisk</h2>
 
-<button onclick="location.href='dashboard.html'">Dashboard</button>
+<button onclick="location.href='user_dashboard.html'">Dashboard</button>
 <button onclick="location.href='loan_check.html'">Loan Eligibility</button>
 <button onclick="location.href='financial_advisory.html'">Financial Advisory</button>
 <button>Profile</button>
-<button>Logout</button>
+<button onclick="logout()">Logout</button>
 
 </div>
 
@@ -82,7 +79,7 @@
 
 <p style="font-size:28px;">
 Risk Score : 
-<span id="riskScore" style="font-size:28px; font-weight:bold; color:#71787e;">0</span>
+<span id="riskScore" style="font-size:28px; font-weight:bold;">0</span>
 </p>
 
 <p style="font-size:28px;">
@@ -93,17 +90,15 @@ Risk Level :
 <h2>Financial Summary</h2>
 
 <table border="1">
-
 <tr>
 <th>Monthly Income</th>
-<td id="incomeDisplay" style="color:rgb(115, 58, 121); font-size:28px;">-</td>
+<td id="incomeDisplay">-</td>
 </tr>
 
 <tr>
 <th>Total Expenses</th>
-<td id="expenseDisplay" style="color:rgb(139, 97, 97); font-size:28px;">-</td>
+<td id="expenseDisplay">-</td>
 </tr>
-
 </table>
 
 <br>
@@ -130,7 +125,6 @@ Risk Level :
 
 <!-- POPUP -->
 <div id="financePopup" class="popup">
-
 <div class="popup-content">
 
 <h2>Enter Financial Details</h2>
@@ -160,37 +154,62 @@ Other<br>
 
 <p id="errorMsg" style="color:red;"></p>
 
-<button onclick="saveFinance()" style="padding:10px; font-size:28px;">Save</button>
+<button onclick="saveFinance()">Save</button>
 
 </div>
-
 </div>
 
 <script>
 
-/* USER NAME */
-document.getElementById("userName").innerText =
-localStorage.getItem("userName");
+/* ✅ MAIN LOAD (FIXED - NO DUPLICATES) */
+window.addEventListener("DOMContentLoaded", function(){
 
-/* LOAD */
-window.onload = function(){
+let currentUser = localStorage.getItem("currentUser");
 
+if(!currentUser){
+alert("Please login first!");
+window.location.href="index.html";
+return;
+}
+
+let userData = JSON.parse(localStorage.getItem("user_" + currentUser));
+
+if(!userData){
+alert("User data missing!");
+window.location.href="index.html";
+return;
+}
+
+/* DISPLAY USER */
+document.getElementById("welcome").innerText = "Welcome, " + userData.name;
+document.getElementById("userName").innerText = userData.name;
+
+/* LOAD DATA OR POPUP */
 let formFilled = localStorage.getItem("financeFilled");
 
 if(formFilled === "yes"){
-    loadSavedData();
+loadSavedData();
 }else{
-    document.getElementById("financePopup").classList.add("show");
+document.getElementById("financePopup").classList.add("show");
 }
 
+});
+
+
+/* LOGOUT */
+function logout(){
+localStorage.removeItem("currentUser");
+window.location.href="index.html";
 }
+
 
 /* OPEN POPUP */
 function openPopup(){
-    document.getElementById("financePopup").classList.add("show");
+document.getElementById("financePopup").classList.add("show");
 }
 
-/* SAVE */
+
+/* SAVE FINANCE */
 function saveFinance(){
 
 let income = Number(document.getElementById("income").value);
@@ -202,56 +221,38 @@ let food = Number(document.getElementById("food").value);
 let utilities = Number(document.getElementById("utilities").value);
 let other = Number(document.getElementById("other").value);
 
-let sumBreakdown = transport + education + food + utilities + other;
+let sum = transport + education + food + utilities + other;
 
-if(sumBreakdown !== totalExpense){
-document.getElementById("errorMsg").innerText =
-"⚠ Total distribution must equal Total Expenses!";
+if(sum !== totalExpense){
+document.getElementById("errorMsg").innerText = "⚠ Must match total expenses!";
 return;
-}else{
-document.getElementById("errorMsg").innerText = "";
 }
 
-/* RISK */
 let savings = income - totalExpense;
-let savingsRatio = savings / income;
+let ratio = savings / income;
 
-let riskScore = 0;
-let riskLevel = "";
-let color = "";
+let riskScore, riskLevel, color;
 
-if(savingsRatio > 0.40){
-riskScore = 85;
-riskLevel = "Low Risk";
-color = "green";
+if(ratio > 0.4){
+riskScore = 85; riskLevel="Low Risk"; color="green";
 }
-else if(savingsRatio > 0.25){
-riskScore = 70;
-riskLevel = "Medium Risk";
-color = "orange";
-}
-else if(savingsRatio > 0.10){
-riskScore = 55;
-riskLevel = "Medium Risk";
-color = "orange";
+else if(ratio > 0.2){
+riskScore = 65; riskLevel="Medium Risk"; color="orange";
 }
 else{
-riskScore = 35;
-riskLevel = "High Risk";
-color = "red";
+riskScore = 40; riskLevel="High Risk"; color="red";
 }
 
 /* DISPLAY */
-document.getElementById("incomeDisplay").innerText = "₹" + income;
-document.getElementById("expenseDisplay").innerText = "₹" + totalExpense;
-
+document.getElementById("incomeDisplay").innerText = "₹"+income;
+document.getElementById("expenseDisplay").innerText = "₹"+totalExpense;
 document.getElementById("riskScore").innerText = riskScore;
 
 let levelEl = document.getElementById("riskLevel");
 levelEl.innerText = riskLevel;
 levelEl.style.color = color;
 
-/* LOCAL SAVE */
+/* SAVE */
 localStorage.setItem("financeFilled","yes");
 localStorage.setItem("income", income);
 localStorage.setItem("totalExpense", totalExpense);
@@ -262,34 +263,16 @@ localStorage.setItem("utilities", utilities);
 localStorage.setItem("other", other);
 localStorage.setItem("riskScore", riskScore);
 localStorage.setItem("riskLevel", riskLevel);
-localStorage.setItem("existingEmi", totalExpense * 0.2);
-
-/* 🔥 BACKEND SAVE (NEW ADDITION) */
-fetch("http://127.0.0.1:5000/save", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-        name: localStorage.getItem("userName"),
-        income: income,
-        expense: totalExpense,
-        risk_score: riskScore
-    })
-})
-.then(res => res.json())
-.then(data => console.log("Saved to backend:", data))
-.catch(err => console.log("Backend error:", err));
 
 /* CLOSE */
 document.getElementById("financePopup").classList.remove("show");
 
 /* CHARTS */
 createCharts(income, transport, education, food, utilities, other, totalExpense);
-
 }
 
-/* LOAD */
+
+/* LOAD SAVED */
 function loadSavedData(){
 
 let income = Number(localStorage.getItem("income")) || 0;
@@ -304,21 +287,20 @@ let other = Number(localStorage.getItem("other")) || 0;
 let riskScore = localStorage.getItem("riskScore") || 0;
 let riskLevel = localStorage.getItem("riskLevel") || "New";
 
-document.getElementById("incomeDisplay").innerText = "₹" + income;
-document.getElementById("expenseDisplay").innerText = "₹" + totalExpense;
-
+document.getElementById("incomeDisplay").innerText = "₹"+income;
+document.getElementById("expenseDisplay").innerText = "₹"+totalExpense;
 document.getElementById("riskScore").innerText = riskScore;
 
 let levelEl = document.getElementById("riskLevel");
 levelEl.innerText = riskLevel;
 
-if(riskLevel === "Low Risk") levelEl.style.color = "green";
-else if(riskLevel === "Medium Risk") levelEl.style.color = "orange";
-else levelEl.style.color = "red";
+if(riskLevel==="Low Risk") levelEl.style.color="green";
+else if(riskLevel==="Medium Risk") levelEl.style.color="orange";
+else levelEl.style.color="red";
 
 createCharts(income, transport, education, food, utilities, other, totalExpense);
-
 }
+
 
 /* CHARTS */
 function createCharts(income, transport, education, food, utilities, other, totalExpense){
@@ -331,8 +313,7 @@ type:'pie',
 data:{
 labels:["Transport","Education","Food","Utilities","Other"],
 datasets:[{
-data:[transport,education,food,utilities,other],
-backgroundColor:["#FF6384","#36A2EB","#FFCE56","#4CAF50","#9C27B0"]
+data:[transport,education,food,utilities,other]
 }]
 }
 });
@@ -342,8 +323,7 @@ type:'bar',
 data:{
 labels:["Income","Expenses"],
 datasets:[{
-data:[income,totalExpense],
-backgroundColor:["#4CAF50","#F44336"]
+data:[income,totalExpense]
 }]
 }
 });
